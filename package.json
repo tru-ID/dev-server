@@ -1,0 +1,19 @@
+{
+  "name": "4auth-node-server",
+  "version": "0.1.0",
+  "description": "An example 4Auth server implementation to support a client application ",
+  "main": "index.js",
+  "author": "Phil Leggetter <phil@leggetter.co.uk>",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "axios": "^0.19.2",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
+  "scripts": {
+    "start": "nodemon src/index.js"
+  }
+}
