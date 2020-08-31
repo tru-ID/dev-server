@@ -1,23 +1,27 @@
 const express = require('express')
 const app = express()
+const bodyParser = require('body-parser')
 const axios = require('axios')
 const qs = require('querystring')
 
 const port = process.env.PORT ?? 4040
 const DEBUG = process.env.DEBUG === undefined? true : process.env.DEBUG === 'true'
+const API_BASE_URL = process.env.API_BASE_URL ?? 'https://eu.api.4auth.io'
 
 const config = require(process.env.CONFIG_PATH ?? `${__dirname}/../4auth.json`)
-log(config)
+log('configuration:\n', config)
 
-app.get('/check', async (req, res) => {
+app.use(bodyParser.json())
 
-    if(!req.query.phone_number) {
+app.post('/check', async (req, res) => {
+
+    if(!req.body.phone_number) {
         res.json({'error_message': 'phone_number parameter is required'}).status(400)
         return
     }
 
     try {
-        const phoneCheck = await createPhoneCheck(req.query.phone_number)
+        const phoneCheck = await createPhoneCheck(req.body.phone_number)
         res.json({
             check_id: phoneCheck.check_id,
             check_url: phoneCheck._links.check_url.href
@@ -58,7 +62,7 @@ app.get('/check_status', async (req, res) => {
 async function createPhoneCheck(phoneNumber) {
     log('createPhoneCheck')
 
-    const url = 'https://eu.api.4auth.io/phone_check/v0.1/checks'
+    const url = `${API_BASE_URL}/phone_check/v0.1/checks`
     const params = {
         phone_number: phoneNumber,
     }
@@ -85,7 +89,7 @@ async function createPhoneCheck(phoneNumber) {
 async function getPhoneCheck(checkId) {
     log('getPhoneCheck')
 
-    const url = `https://eu.api.4auth.io/phone_check/v0.1/checks/${checkId}`
+    const url = `${API_BASE_URL}/phone_check/v0.1/checks/${checkId}`
     const params = {}
 
     const auth = (await getAccessToken()).access_token
@@ -111,7 +115,7 @@ async function getPhoneCheck(checkId) {
 async function getAccessToken() {
     log('getAccessToken')
 
-    const url = 'https://eu.api.4auth.io/oauth2/v1/token'
+    const url = `${API_BASE_URL}/oauth2/v1/token`
     const params = qs.stringify({
         grant_type: 'client_credentials',
         scope: ['phone_check']
