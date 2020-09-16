@@ -69,7 +69,7 @@ app.get('/check_status', async (req, res) => {
 })
 
 app.all('/callback', async (req, res) =>{
-    const parsed = httpSignature.parseRequest(req, options)
+    const parsed = httpSignature.parseRequest(req)
     const keyId = parsed.keyId;
 
     const jwk = await getSigningKey(keyId);
