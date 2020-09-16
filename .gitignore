@@ -1,2 +1,4 @@
 node_modules
 4auth.json
+.vscode/
+.env*
