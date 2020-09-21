@@ -8,6 +8,7 @@ You will need:
 
 - Node.JS installed
 - a 4Auth account
+- a local tunnel solution if you wish to recieve Phone Check callbacks
 
 ## Getting Started
 
@@ -31,7 +32,7 @@ or
 yarn install
 ```
 
-### Optional configuration
+## Configuration
 
 If required, you can make configuration changes with the following environment variables:
 
@@ -39,6 +40,19 @@ If required, you can make configuration changes with the following environment v
 - `DEBUG` : determines whether debug information is logged via `console.log`
 - `CONFIG_PATH` : the path to the `4auth.json` configuration file for the 4Auth project
 - `API_BASE_URL` : the 4Auth base URL. Defaults to `https://eu.api.4auth.io`
+
+### Phone Check callbacks
+
+If you wish to receive Phone Check HTTP callbacks when the Phone Check enters and end state, you must:
+
+1. Run a local tunnel solution to expose your local running server to the Internet
+2. Configure your Project to have a `phonecheck_callback_url
+
+From the project directory run the following command replacing `{local_tunnel_url}` with the URL exposing your localhost server to the Internet:
+
+```
+$ 4auth projects:update --phonecheck-callback {local_tunnel_url}/callback
+```
 
 ### Run the server
 

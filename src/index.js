@@ -68,7 +68,11 @@ app.get('/check_status', async (req, res) => {
     
 })
 
-app.all('/callback', async (req, res) =>{
+app.post('/callback', async (req, res) =>{
+    log('received callback',
+        req.headers,
+        req.body)
+
     const parsed = httpSignature.parseRequest(req)
     const keyId = parsed.keyId;
 
