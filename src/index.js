@@ -74,9 +74,9 @@ app.post('/callback', async (req, res) =>{
         req.body)
 
     const parsed = httpSignature.parseRequest(req)
-    const keyId = parsed.keyId;
+    const keyId = parsed.keyId
 
-    const jwk = await getSigningKey(keyId);
+    const jwk = await getSigningKey(keyId)
 
     const verified = httpSignature.verifySignature(parsed, jwk.getPublicKey())
     if (!verified) {
@@ -84,7 +84,7 @@ app.post('/callback', async (req, res) =>{
         return
     }
     res.sendStatus(200)
-});
+})
 
 async function createPhoneCheck(phoneNumber) {
     log('createPhoneCheck')
