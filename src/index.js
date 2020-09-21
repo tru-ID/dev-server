@@ -3,6 +3,9 @@ const app = express()
 const bodyParser = require('body-parser')
 const axios = require('axios')
 const qs = require('querystring')
+const jwksClient = require('jwks-rsa')
+const httpSignature = require('http-signature')
+const util = require('util')
 
 const port = process.env.PORT ?? 4040
 const DEBUG = process.env.DEBUG === undefined? true : process.env.DEBUG === 'true'
@@ -10,6 +13,12 @@ const API_BASE_URL = process.env.API_BASE_URL ?? 'https://eu.api.4auth.io'
 
 const config = require(process.env.CONFIG_PATH ?? `${__dirname}/../4auth.json`)
 log('configuration:\n', config)
+
+const keyClient = jwksClient({
+    jwksUri: `${API_BASE_URL}/.well-known/jwks.json`
+})
+
+const getSigningKey = util.promisify(keyClient.getSigningKey)
 
 app.use(bodyParser.json())
 
@@ -58,6 +67,20 @@ app.get('/check_status', async (req, res) => {
 
     
 })
+
+app.all('/callback', async (req, res) =>{
+    const parsed = httpSignature.parseRequest(req)
+    const keyId = parsed.keyId;
+
+    const jwk = await getSigningKey(keyId);
+
+    const verified = httpSignature.verifySignature(parsed, jwk.getPublicKey())
+    if (!verified) {
+        res.sendStatus(400)
+        return
+    }
+    res.sendStatus(200)
+});
 
 async function createPhoneCheck(phoneNumber) {
     log('createPhoneCheck')
