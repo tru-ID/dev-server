@@ -22,6 +22,9 @@ const getSigningKey = util.promisify(keyClient.getSigningKey)
 
 app.use(bodyParser.json())
 
+/**
+ * Handles a request to create a Phone Check for the phone number within `req.body.phone_number`.
+ */
 app.post('/check', async (req, res) => {
 
     if(!req.body.phone_number) {
@@ -45,6 +48,9 @@ app.post('/check', async (req, res) => {
 
 })
 
+/**
+ * Handle the request to check the state of a Phone Check. `req.query.check_id` must contain a valid Phone Check ID.
+ */
 app.get('/check_status', async (req, res) => {
     if(!req.query.check_id) {
         res.json({'error_message': 'check_id parameter is required'}).status(400)
@@ -65,9 +71,11 @@ app.get('/check_status', async (req, res) => {
         res.send('Whoops!').status(500)
     }
 
-    
 })
 
+/**
+ * Handles a callback from the tru.ID platform indicating that a Phone Check has reached an end state.
+ */
 app.post('/callback', async (req, res) =>{
     log('received callback',
         req.headers,
@@ -86,6 +94,11 @@ app.post('/callback', async (req, res) =>{
     res.sendStatus(200)
 })
 
+/**
+ * Creats a Phone Check for the given `phoneNumber`.
+ * 
+ * @param {String} phoneNumber - The phone number to create a Phone Check for.
+ */
 async function createPhoneCheck(phoneNumber) {
     log('createPhoneCheck')
 
@@ -113,6 +126,11 @@ async function createPhoneCheck(phoneNumber) {
     return phoneCheckCreationResult.data
 }
 
+/**
+ * Retrieves a Phone Check with the given `check_id`
+ * 
+ * @param {String} checkId The ID of the Phone Check to retrieve.
+ */
 async function getPhoneCheck(checkId) {
     log('getPhoneCheck')
 
@@ -139,6 +157,9 @@ async function getPhoneCheck(checkId) {
     return getPhoneCheckResult.data
 }
 
+/**
+ * Creates an Access Token withon `phone_check` scope.
+ */
 async function getAccessToken() {
     log('getAccessToken')
 
