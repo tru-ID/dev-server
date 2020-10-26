@@ -9,9 +9,9 @@ const util = require('util')
 
 const port = process.env.PORT ?? 4040
 const DEBUG = process.env.DEBUG === undefined? true : process.env.DEBUG === 'true'
-const API_BASE_URL = process.env.API_BASE_URL ?? 'https://eu.api.4auth.io'
+const API_BASE_URL = process.env.API_BASE_URL ?? 'https://eu.api.tru.id'
 
-const config = require(process.env.CONFIG_PATH ?? `${__dirname}/../4auth.json`)
+const config = require(process.env.CONFIG_PATH ?? `${__dirname}/../tru.json`)
 log('configuration:\n', config)
 
 const keyClient = jwksClient({
