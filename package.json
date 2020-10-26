@@ -1,9 +1,13 @@
 {
-  "name": "4auth-node-server",
+  "name": "tru-node-server",
   "version": "0.1.0",
-  "description": "An example 4Auth server implementation to support a client application ",
+  "description": "An example tru.ID server implementation to support a client application ",
   "main": "index.js",
-  "author": "Phil Leggetter <phil@leggetter.co.uk>",
+  "author": {
+    "name" : "tru.ID",
+    "email" : "community@tru.id",
+    "url" : "https://tru.id"
+  },
   "license": "MIT",
   "private": false,
   "dependencies": {
