@@ -18,7 +18,7 @@ Clone or unzip the tru.ID Node Server into a directory.
 
 - Install the [tru CLI](https://tru.id/docs/reference/cli)
 - Setup the CLI with the `client_id` and `client_secret` from the [tru.ID Console](https://tru.id/console)
-- Create a project with the CLI pointing to the tru.ID Node Server directory `$ tru projects:create --project_dir PATH_TO_DIR`. This will create a `tru.json` file in the directory.
+- Create a project with the CLI pointing to the tru.ID Node Server directory `$ tru projects:create --project-dir PATH_TO_SERVER_DIR`. This will create a `tru.json` file in the directory.
 
 ### Install dependencies:
 
@@ -40,6 +40,8 @@ If required, you can make configuration changes with the following environment v
 - `DEBUG` : determines whether debug information is logged via `console.log`
 - `CONFIG_PATH` : the path to the `tru.json` configuration file for the tru.ID project
 - `API_BASE_URL` : the tru.ID base URL. Defaults to `https://eu.api.tru.id`
+
+The server will attempt to load environment variables from a `.env` file in the root directory of the server.
 
 ### Phone Check callbacks
 
