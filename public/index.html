@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>tru.ID Example Server</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <h1><b>tru.ID</b> Example Server</h1>
+    <p>
+        The example server code sample provides a basic example of how you can integrate <a href="https://tru.id">tru.ID</a> into a back-end Node.js server where the back-end is effectively middleware that ensures API calls to the <b>tru.ID</b> API are authenticated.
+    </p>
+
+    <h2>Routes</h2>
+    <p>
+        It exposes the following routes as examples:
+    </p>
+
+    <h3>PhoneCheck</h3>
+    <ul>
+        <li><code>POST /phone-check</code> to create a PhoneCheck resource</li>
+        <li><code>GET /phone-check</code> to get a PhoneCheck resource</li>
+        <li><code>POST /phone-check/callback</code> to handle a PhoneCheck callback from the <b>tru.ID</b> platform</li>
+    </ul>
+
+    <h3>SIMCheck</h3>
+    <ul>
+        <li><code>POST /sim-check</code> to create a SIMCheck</li>
+    </ul>
+
+    <h2>Test Pages</h2>
+    <p>
+        The following pages allow you to test out some of the functionality.
+    </p>
+
+    <h3>SIMCheck</h3>
+    <ul>
+        <li>
+            <a href="test/sim-check.html">Create a PhoneCheck</a>
+        </li>
+    </ul>
+
+</body>
+
+</html>
