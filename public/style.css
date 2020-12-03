@@ -1,0 +1,42 @@
+h1, h2, h3 {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+
+h2 {
+    margin-top: 2em;
+}
+
+body, p, form, input {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+input {
+    line-height: 1.6em;
+}
+
+p, li, dt, dd, code {
+    line-height: 1.4em;
+}
+
+dd {
+    margin-bottom: 0.5em;
+}
+
+body {
+    padding: 2em 5em;
+}
+
+form label {
+    margin-right: 1em;
+}
+
+code {
+    background-color: #0a0a32;
+    color: #FF8F1F;
+    padding: 0.2em;
+}
+
+.top-nav {
+    position: fixed;
+    top: 20px;
+}
