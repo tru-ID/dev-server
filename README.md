@@ -1,13 +1,13 @@
-# tru.ID Node Server
+# tru.ID Node Server Example
 
-The tru.ID Node Server provides basic example code to be used with a tru.ID Client using the Phone Check product.
+The tru.ID Node Server provides basic example code to be used with client application.
 
 ## Before you being
 
 You will need:
 
 - Node.JS installed
-- a tru.ID account
+- a [tru.ID](https://tru.id) account
 - a local tunnel solution if you wish to recieve Phone Check callbacks
 
 ## Getting Started
@@ -16,7 +16,7 @@ Clone or unzip the tru.ID Node Server into a directory.
 
 ### Create a tru.ID Project
 
-- Install the [tru CLI](https://tru.id/docs/reference/cli)
+- Install the [tru.ID CLI](https://tru.id/docs/reference/cli)
 - Setup the CLI with the `client_id` and `client_secret` from the [tru.ID Console](https://tru.id/console)
 - Create a project with the CLI pointing to the tru.ID Node Server directory `$ tru projects:create --project-dir PATH_TO_SERVER_DIR`. This will create a `tru.json` file in the directory.
 
@@ -53,7 +53,7 @@ If you wish to receive Phone Check HTTP callbacks when the Phone Check enters an
 From the project directory run the following command replacing `{local_tunnel_url}` with the URL exposing your localhost server to the Internet:
 
 ```
-$ tru projects:update --phonecheck-callback {local_tunnel_url}/callback
+$ tru projects:update --phonecheck-callback {local_tunnel_url}/phone-check/callback
 ```
 
 ### Run the server
@@ -67,3 +67,8 @@ or
 ```
 yarn start
 ```
+
+### Explore
+
+- View the code in [blob/main/src/index.js](blob/main/src/index.js)
+- The server exposes a basic homepage with some test pages that allow you to try out some functionality

@@ -23,11 +23,17 @@ const keyClient = jwksClient({
 const getSigningKey = util.promisify(keyClient.getSigningKey)
 
 app.use(bodyParser.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(express.static('public'))
+
+// Routes
+
+// PhoneCheck
 
 /**
- * Handles a request to create a Phone Check for the phone number within `req.body.phone_number`.
+ * Handles a request to create a PhoneCheck for the phone number within `req.body.phone_number`.
  */
-app.post('/check', async (req, res) => {
+async function phoneCheck(req, res) {
 
     if(!req.body.phone_number) {
         res.json({'error_message': 'phone_number parameter is required'}).status(400)
@@ -36,6 +42,8 @@ app.post('/check', async (req, res) => {
 
     try {
         const phoneCheck = await createPhoneCheck(req.body.phone_number)
+
+        // Select data to send to client
         res.json({
             check_id: phoneCheck.check_id,
             check_url: phoneCheck._links.check_url.href
@@ -48,12 +56,14 @@ app.post('/check', async (req, res) => {
         res.send('Whoops!').status(500)
     }
 
-})
+}
+app.post('/check', phoneCheck)
+app.post('/phone-check', phoneCheck)
 
 /**
  * Handle the request to check the state of a Phone Check. `req.query.check_id` must contain a valid Phone Check ID.
  */
-app.get('/check_status', async (req, res) => {
+async function phoneCheckStatus(req, res) {
     if(!req.query.check_id) {
         res.json({'error_message': 'check_id parameter is required'}).status(400)
         return
@@ -67,19 +77,21 @@ app.get('/check_status', async (req, res) => {
         })
     }
     catch(error) {
-        log('error in /check_status')
+        log('error in getting PhoneCheck status')
         log(error.toString(), error.data)
 
         res.send('Whoops!').status(500)
     }
 
-})
+}
+app.get('/check_status', phoneCheckStatus)
+app.get('/phone-check', phoneCheckStatus)
 
 /**
  * Handles a callback from the tru.ID platform indicating that a Phone Check has reached an end state.
  */
-app.post('/callback', async (req, res) =>{
-    log('received callback',
+async function phoneCheckCallback(req, res) {
+    log('PhoneCheck received callback',
         req.headers,
         req.body)
 
@@ -94,10 +106,45 @@ app.post('/callback', async (req, res) =>{
         return
     }
     res.sendStatus(200)
-})
+}
+app.post('/callback', phoneCheckCallback)
+app.post('/phone-check/callback', phoneCheckCallback)
+
+// SIMCheck
+
+async function SimCheck(req, res) {
+    const phoneNumber = req.body.phone_number || // application/json
+                        req.form.phone_number    // application/x-www-form-urlencoded
+    if(!phoneNumber) {
+        res.json({'error_message': 'phone_number parameter is required'}).status(400)
+        return
+    }
+
+    try {
+        const simCheck = await createSimCheck(req.body.phone_number)
+        log(simCheck)
+
+        // Select data to send to client
+        res.json({
+            no_sim_change: simCheck.no_sim_change,
+            last_sim_change_at: simCheck.last_sim_change_at
+        })
+    }
+    catch(error) {
+        log('error in creating SIMCheck')
+        log(error.toString(), error.data)
+
+        res.send('Whoops!').status(500)
+    }
+}
+app.post('/sim-check', SimCheck)
+
+// Resource Functions
+
+// PhoneCheck
 
 /**
- * Creats a Phone Check for the given `phoneNumber`.
+ * Creates a PhoneCheck for the given `phoneNumber`.
  * 
  * @param {String} phoneNumber - The phone number to create a Phone Check for.
  */
@@ -129,9 +176,9 @@ async function createPhoneCheck(phoneNumber) {
 }
 
 /**
- * Retrieves a Phone Check with the given `check_id`
+ * Retrieves a PhoneCheck with the given `check_id`
  * 
- * @param {String} checkId The ID of the Phone Check to retrieve.
+ * @param {String} checkId The ID of the PhoneCheck to retrieve.
  */
 async function getPhoneCheck(checkId) {
     log('getPhoneCheck')
@@ -159,6 +206,37 @@ async function getPhoneCheck(checkId) {
     return getPhoneCheckResult.data
 }
 
+// SIMCheck
+
+async function createSimCheck(phoneNumber) {
+    log('createSimCheck')
+
+    const url = `${API_BASE_URL}/sim_check/v0.1/checks`
+    const params = {
+        phone_number: phoneNumber,
+    }
+
+    const auth = (await getAccessToken()).access_token
+    const requestHeaders = {
+        Authorization: `Bearer ${auth}`,
+        'Content-Type': 'application/json'
+    }
+
+    log('url', url)
+    log('params', params)
+    log('requestHeaders', requestHeaders)
+
+    const simCheckCreationResult = await axios.post(url, params, {
+        headers: requestHeaders
+    })
+
+    log('simCheckCreationResult.data', simCheckCreationResult.data)
+
+    return simCheckCreationResult.data
+}
+
+// Tokens
+
 /**
  * Creates an Access Token withon `phone_check` scope.
  */
@@ -168,7 +246,9 @@ async function getAccessToken() {
     const url = `${API_BASE_URL}/oauth2/v1/token`
     const params = qs.stringify({
         grant_type: 'client_credentials',
-        scope: ['phone_check']
+
+        // scope to use depends on product
+        scope: ['phone_check sim_check']
     })
 
     const toEncode = `${config.credentials[0].client_id}:${config.credentials[0].client_secret}`
