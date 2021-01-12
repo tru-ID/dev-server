@@ -9,7 +9,7 @@ const util = require('util')
 
 require('dotenv').config()
 
-const port = process.env.PORT ?? 4040
+const port = process.env.PORT ?? 8080
 const DEBUG = process.env.DEBUG === undefined? true : process.env.DEBUG === 'true'
 const API_BASE_URL = process.env.API_BASE_URL ?? 'https://eu.api.tru.id'
 
