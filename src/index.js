@@ -1,26 +1,21 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
-const axios = require('axios')
-const qs = require('querystring')
 const jwksClient = require('jwks-rsa')
 const httpSignature = require('http-signature')
 const util = require('util')
 
-require('dotenv').config()
+const config = require('./config')
 
-const port = process.env.PORT ?? 8080
-const DEBUG = process.env.DEBUG === undefined? true : process.env.DEBUG === 'true'
-const API_BASE_URL = process.env.API_BASE_URL ?? 'https://eu.api.tru.id'
-
-const config = require(process.env.CONFIG_PATH ?? `${__dirname}/../tru.json`)
 log('configuration:\n', config)
 
 const keyClient = jwksClient({
-    jwksUri: `${API_BASE_URL}/.well-known/jwks.json`
+    jwksUri: `${config.API_BASE_URL}/.well-known/jwks.json`
 })
 
 const getSigningKey = util.promisify(keyClient.getSigningKey)
+
+const api = require('./api')
 
 app.use(bodyParser.json())
 app.use(express.urlencoded({ extended: true }))
@@ -41,7 +36,7 @@ async function phoneCheck(req, res) {
     }
 
     try {
-        const phoneCheck = await createPhoneCheck(req.body.phone_number)
+        const phoneCheck = await api.createPhoneCheck(req.body.phone_number)
 
         // Select data to send to client
         res.json({
@@ -70,7 +65,7 @@ async function phoneCheckStatus(req, res) {
     }
 
     try {
-        const phoneCheck = await getPhoneCheck(req.query.check_id)
+        const phoneCheck = await api.getPhoneCheck(req.query.check_id)
         res.json({
             match: phoneCheck.match,
             check_id: phoneCheck.check_id        
@@ -121,7 +116,7 @@ async function SimCheck(req, res) {
     }
 
     try {
-        const simCheck = await createSimCheck(req.body.phone_number)
+        const simCheck = await api.createSimCheck(phoneNumber)
         log(simCheck)
 
         // Select data to send to client
@@ -139,144 +134,38 @@ async function SimCheck(req, res) {
 }
 app.post('/sim-check', SimCheck)
 
-// Resource Functions
+// Country
 
-// PhoneCheck
+async function CountryCoverage(req, res) {
+    const countryCode = req.query.country_code
 
-/**
- * Creates a PhoneCheck for the given `phoneNumber`.
- * 
- * @param {String} phoneNumber - The phone number to create a Phone Check for.
- */
-async function createPhoneCheck(phoneNumber) {
-    log('createPhoneCheck')
-
-    const url = `${API_BASE_URL}/phone_check/v0.1/checks`
-    const params = {
-        phone_number: phoneNumber,
+    if(!countryCode) {
+        res.json({'error_message': 'country_code parameter is required'}).status(400)
+        return
     }
 
-    const auth = (await getAccessToken()).access_token
-    const requestHeaders = {
-        Authorization: `Bearer ${auth}`,
-        'Content-Type': 'application/json'
+    try {
+        const countryCoverage = await api.getCountryCoverage(countryCode)
+        log(countryCoverage)
+
+        // Select data to send to client
+        res.json(countryCoverage)
     }
+    catch(error) {
+        log('error getting country coverage')
+        log(error.toString(), error.data)
 
-    log('url', url)
-    log('params', params)
-    log('requestHeaders', requestHeaders)
-
-    const phoneCheckCreationResult = await axios.post(url, params, {
-        headers: requestHeaders
-    })
-
-    log('phoneCheckCreationResult.data', phoneCheckCreationResult.data)
-
-    return phoneCheckCreationResult.data
+        res.send('Whoops!').status(500)
+    }
 }
-
-/**
- * Retrieves a PhoneCheck with the given `check_id`
- * 
- * @param {String} checkId The ID of the PhoneCheck to retrieve.
- */
-async function getPhoneCheck(checkId) {
-    log('getPhoneCheck')
-
-    const url = `${API_BASE_URL}/phone_check/v0.1/checks/${checkId}`
-    const params = {}
-
-    const auth = (await getAccessToken()).access_token
-    const requestHeaders = {
-        Authorization: `Bearer ${auth}`,
-        'Content-Type': 'application/json'
-    }
-
-    log('url', url)
-    log('params', params)
-    log('requestHeaders', requestHeaders)
-
-    const getPhoneCheckResult = await axios.get(url, {
-        params: params,
-        headers: requestHeaders
-    })
-
-    log('getPhoneCheckResult.data', getPhoneCheckResult.data)
-
-    return getPhoneCheckResult.data
-}
-
-// SIMCheck
-
-async function createSimCheck(phoneNumber) {
-    log('createSimCheck')
-
-    const url = `${API_BASE_URL}/sim_check/v0.1/checks`
-    const params = {
-        phone_number: phoneNumber,
-    }
-
-    const auth = (await getAccessToken()).access_token
-    const requestHeaders = {
-        Authorization: `Bearer ${auth}`,
-        'Content-Type': 'application/json'
-    }
-
-    log('url', url)
-    log('params', params)
-    log('requestHeaders', requestHeaders)
-
-    const simCheckCreationResult = await axios.post(url, params, {
-        headers: requestHeaders
-    })
-
-    log('simCheckCreationResult.data', simCheckCreationResult.data)
-
-    return simCheckCreationResult.data
-}
-
-// Tokens
-
-/**
- * Creates an Access Token withon `phone_check` scope.
- */
-async function getAccessToken() {
-    log('getAccessToken')
-
-    const url = `${API_BASE_URL}/oauth2/v1/token`
-    const params = qs.stringify({
-        grant_type: 'client_credentials',
-
-        // scope to use depends on product
-        scope: ['phone_check sim_check']
-    })
-
-    const toEncode = `${config.credentials[0].client_id}:${config.credentials[0].client_secret}`
-    const auth = Buffer.from(toEncode).toString('base64')
-    const requestHeaders = {
-        Authorization: `Basic ${auth}`,
-        'Content-Type': 'application/x-www-form-urlencoded'
-    }
-
-    log('url', url)
-    log('params', params)
-    log('requestHeaders', requestHeaders)
-
-    const accessTokenResult = await axios.post(url, params, {
-        headers: requestHeaders
-    })
-
-    log('accessTokenResult.data', accessTokenResult.data)
-
-    return accessTokenResult.data
-}
+app.get('/country', CountryCoverage)
 
 function log() {
-    if(DEBUG) {
+    if(config.DEBUG) {
         console.debug.apply(null, arguments)
     }
 }
 
-app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
+app.listen(config.PORT, () => {
+    console.log(`Example app listening at http://localhost:${config.PORT}`)
 })
