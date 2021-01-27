@@ -160,6 +160,32 @@ async function CountryCoverage(req, res) {
 }
 app.get('/country', CountryCoverage)
 
+// Device
+
+async function DeviceCoverage(req, res) {
+    const ipAddress = req.query.id_address
+
+    if(!ipAddress) {
+        res.json({'error_message': 'id_address parameter is required'}).status(400)
+        return
+    }
+
+    try {
+        const deviceCoverage = await api.getDeviceCoverage(ipAddress)
+        log(deviceCoverage)
+
+        // Select data to send to client
+        res.json(deviceCoverage)
+    }
+    catch(error) {
+        log('error getting device coverage')
+        log(error.toString(), error.data)
+
+        res.send('Whoops!').status(500)
+    }
+}
+app.get('/device', DeviceCoverage)
+
 function log() {
     if(config.DEBUG) {
         console.debug.apply(null, arguments)

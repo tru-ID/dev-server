@@ -101,16 +101,15 @@ async function getCountryCoverage(countryCode) {
     log('getCountryCoverage')
 
     const url = `${config.API_BASE_URL}/coverage/v0.1/countries/${countryCode}`
-    const auth = (await getAccessToken()).access_token
+    const auth = (await getAccessToken(['coverage'])).access_token
     const requestHeaders = {
-        Authorization: `Bearer ${auth}`,
-        'Content-Type': 'application/json'
+        Authorization: `Bearer ${auth}`
     }
 
     log('url', url)
     log('requestHeaders', requestHeaders)
 
-    const countryCoverageResult = await axios.get(url, {}, {
+    const countryCoverageResult = await axios.get(url, {
         headers: requestHeaders
     })
 
@@ -119,12 +118,38 @@ async function getCountryCoverage(countryCode) {
     return countryCoverageResult.data
 }
 
+// Coverage / Device
+
+async function getDeviceCoverage(ipAddress) {
+    log('getIPCoverage')
+
+    const url = `${config.API_BASE_URL}/coverage/v0.1/device_ips/${ipAddress}`
+    const auth = (await getAccessToken(['coverage'])).access_token
+    const requestHeaders = {
+        Authorization: `Bearer ${auth}`
+    }
+
+    log('url', url)
+    log('requestHeaders', requestHeaders)
+
+    const deviceCoverageResult = await axios.get(url, {
+        headers: requestHeaders,
+        validateStatus: function (status) {
+            return status >= 200 && status <= 404;
+        },
+    })
+
+    log('deviceCoverageResult.data', deviceCoverageResult.data)
+
+    return deviceCoverageResult.data
+}
+
 // Tokens
 
 /**
  * Creates an Access Token withon `phone_check` scope.
  */
-async function getAccessToken() {
+async function getAccessToken(scopes = ['phone_check sim_check coverage']) {
     log('getAccessToken')
 
     const url = `${config.API_BASE_URL}/oauth2/v1/token`
@@ -132,7 +157,7 @@ async function getAccessToken() {
         grant_type: 'client_credentials',
 
         // scope to use depends on product
-        scope: ['phone_check sim_check coverage']
+        scope: scopes
     })
 
     const toEncode = `${config.PROJECT.credentials[0].client_id}:${config.PROJECT.credentials[0].client_secret}`
@@ -166,5 +191,6 @@ module.exports = {
     getPhoneCheck: getPhoneCheck,
     createSimCheck: createSimCheck,
     getCountryCoverage: getCountryCoverage,
-    getAccessToken: getAccessToken
+    getAccessToken: getAccessToken,
+    getDeviceCoverage: getDeviceCoverage
 }
