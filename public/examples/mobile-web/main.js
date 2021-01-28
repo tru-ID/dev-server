@@ -65,7 +65,7 @@ async function phoneCheckFormSubmit(ev) {
             progressUpdate('Creating Mobile Data Session')
 
             // Execute the PhoneCheck
-            await truID.phoneCheck(phoneCheckCreateResult.data.check_url)
+            await tru.ID.phoneCheck(phoneCheckCreateResult.data.check_url)
 
             // check_url has been navigated to and check completed.
             getPhoneCheckResult(phoneCheckCreateResult.data.check_id)

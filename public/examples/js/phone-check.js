@@ -1,5 +1,6 @@
-window.truID = {}
-window.truID.phoneCheck = function(checkUrl) {
+window.tru = {}
+window.tru.ID = {}
+window.tru.ID.phoneCheck = function(checkUrl) {
     console.log('truId:phoneCheck')
     if(!checkUrl) {
         throw new Error('truId:phoneCheck: checkUrl is required')
