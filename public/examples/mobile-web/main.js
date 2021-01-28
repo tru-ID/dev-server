@@ -15,7 +15,6 @@ function clearProgress() {
 }
 
 // Get coverage based on device IP.
-// If there's no coverage then prompt the user to turn off WiFi if it's enabled and recheck.
 async function checkCoverage() {
     document.body.classList = ['loading']
     clearProgress()
@@ -29,6 +28,7 @@ async function checkCoverage() {
         })
         console.log(deviceCoverageResult)
 
+        // If there's no coverage then prompt the user to turn off WiFi if it's enabled and recheck.
         if(deviceCoverageResult.status === 200) {
             // tru.ID has coverage
             document.body.classList = ['has-coverage']
@@ -36,6 +36,9 @@ async function checkCoverage() {
         else if(deviceCoverageResult.status === 404) {
             // No coverage
             document.body.classList = ['no-coverage']
+        }
+        else {
+            handleError('Unexpected result from device coverage check.')
         }
     }
     catch(ex) {
@@ -50,16 +53,21 @@ async function phoneCheckFormSubmit(ev) {
     const phoneNumberEl = document.getElementById('phone_number')
     let phoneNumberValue = phoneNumberEl.value
 
+    // strip spaces out of the phone number and replace within input
     phoneNumberValue = phoneNumberValue.replace(/\s+/g, '')
     phoneNumberEl.value = phoneNumberValue
 
     try {
+        // Create PhoneCheck resource
         const phoneCheckCreateResult = await axios.post('/phone-check', {phone_number: phoneNumberValue})
         console.log(phoneCheckCreateResult)
         if(phoneCheckCreateResult.status === 200) {
             progressUpdate('Creating Mobile Data Session')
+
+            // Execute the PhoneCheck
             await truID.phoneCheck(phoneCheckCreateResult.data.check_url)
 
+            // check_url has been navigated to and check completed.
             getPhoneCheckResult(phoneCheckCreateResult.data.check_id)
         }
         else {
@@ -75,10 +83,11 @@ async function phoneCheckFormSubmit(ev) {
 
 async function getPhoneCheckResult(checkId) {
     try {
+        // Retrieve the result and show the result
         const phoneCheckResult = await axios.get(`/phone-check?check_id=${checkId}`)
         console.log(phoneCheckResult)
 
-        progressUpdate(`Phone Number match: ${phoneCheckResult.data.match? '✅': '❌'}`)
+        progressUpdate(`Phone Number Verified: ${phoneCheckResult.data.match? '✅': '❌'}`)
     }
     catch(error) {
         console.error(error)
