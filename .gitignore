@@ -1,4 +1,4 @@
 node_modules
 tru.json
 .vscode/
-.env*
+.env
