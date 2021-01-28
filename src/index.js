@@ -19,12 +19,26 @@ const api = require('./tru-api')
 
 app.use(bodyParser.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(express.static('public'))
 
 // required for `req.ip` to be populated if behind a proxy i.e. ngrok
 app.set('trust proxy', true)
 
-// Routes
+// setup basic auth if credentials are in .env
+if(config.basicAuth.username && config.basicAuth.password) {
+    const passwordProtected = require('express-password-protect')
+    const authConfig = {
+        username: config.basicAuth.username,
+        password: config.basicAuth.password,
+        maxAge: 60000 * 10 // 1 hour
+    }
+    app.use(passwordProtected(authConfig))
+    app.post('/', (req, res) => {
+        res.redirect('/')
+    })
+}
+app.use(express.static('public'))
+
+// --- Routes ---
 
 // PhoneCheck
 

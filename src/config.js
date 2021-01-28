@@ -18,6 +18,10 @@ module.exports = {
     port: PORT,
     DEBUG: DEBUG,
     apiBaseUrl: API_BASE_URL,
+    basicAuth: {
+        username: process.env.USERNAME,
+        password: process.env.PASSWORD
+    },
     project: {
         client_id: CLIENT_ID || projectConfig.credentials[0].client_id,
         client_secret: CLIENT_SECRET || projectConfig.credentials[0].client_secret
