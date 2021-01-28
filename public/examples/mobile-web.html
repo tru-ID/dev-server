@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Mobile Web PhoneCheck</title>
+    <link rel="stylesheet" href="/style.css">
+
+    <style>
+        #checking_notice {
+            display: block;
+        }
+
+        #error_notice {
+            display: none;
+        }
+
+        .error #error_notice {
+            display: block;
+        }
+
+        .no-coverage #checking_notice,
+        .has-coverage #checking_notice,
+        .error #checking_notice {
+            display: none;
+        }
+
+        .loading #phone_check_form,
+        .error #phone_check_form {
+            display: none;
+        }
+
+        .loading #wifi_notice {
+            display: none;
+        }
+
+        .no-coverage #phone_check_form,
+        .error #phone_check_form {
+            display: none;
+        }
+
+        .has-coverage #wifi_notice,
+        .error #wifi_notice {
+            display: none;
+        }
+
+        .no-coverage #wifi_notice {
+            display: block
+        }
+
+        .has-coverage #phone_check_form {
+            display: block;
+        }
+
+
+
+    </style>
+</head>
+
+<body>
+    <nav class="top-nav"><a href="/">⬅ back</a></nav>
+
+    <h1>Mobile Web PhoneCheck</h1>
+    <div id="checking_notice">
+        Checking your device coverage. Please wait.
+    </div>
+    <div id="wifi_notice">
+        You do not appear to be on a mobile data connection. Please <b>turn off your WiFi or connect to a mobile data network</b> and retry.
+        <button id="wifi_retry">Retry</button>
+    </div>
+    <div id="error_notice">
+        An error occurred while checking device coverage. Please retry.
+        <button id="error_retry">Retry</button>
+    </div>
+
+    <div id="phone_check_form">
+        <form method="post" action="/phone-check">
+            <label for="phone_number">Phone Number</label>
+            <input type="tel" name="phone_number" required />
+            <input type="submit" value="Verify my phone number" />
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        // Get coverage based on device IP.
+        // If there's no coverage then prompt the user to turn off WiFi if it's enabled and recheck.
+        async function checkCoverage() {
+            document.body.classList = ['loading']
+
+            try {
+                const deviceCoverageResult = await axios.get('/device', {
+                    validateStatus: function (status) {
+                        return status >= 200 && status <= 404;
+                    },
+                })
+                console.log(deviceCoverageResult)
+
+                if(deviceCoverageResult.status === 200) {
+                    // tru.ID has coverage
+                    document.body.classList = ['has-coverage']
+                }
+                else if(deviceCoverageResult.status === 404) {
+                    // No coverage
+                    document.body.classList = ['no-coverage']
+                }
+            }
+            catch(ex) {
+                document.body.classList = ['error']
+            }
+        }
+
+        document.getElementById('wifi_retry').addEventListener('click', checkCoverage, false)
+        document.getElementById('error_retry').addEventListener('click', checkCoverage, false)
+
+        checkCoverage()
+    </script>
+</body>
+
+</html>

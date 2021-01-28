@@ -15,11 +15,14 @@ const keyClient = jwksClient({
 
 const getSigningKey = util.promisify(keyClient.getSigningKey)
 
-const api = require('./api')
+const api = require('./tru-api')
 
 app.use(bodyParser.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static('public'))
+
+// required for `req.ip` to be populated if behind a proxy i.e. ngrok
+app.set('trust proxy', true)
 
 // Routes
 
@@ -163,7 +166,7 @@ app.get('/country', CountryCoverage)
 // Device
 
 async function DeviceCoverage(req, res) {
-    const ipAddress = req.query.id_address
+    const ipAddress = req.query.id_address || req.ip
 
     if(!ipAddress) {
         res.json({'error_message': 'id_address parameter is required'}).status(400)
@@ -174,8 +177,7 @@ async function DeviceCoverage(req, res) {
         const deviceCoverage = await api.getDeviceCoverage(ipAddress)
         log(deviceCoverage)
 
-        // Select data to send to client
-        res.json(deviceCoverage)
+        res.status(deviceCoverage.status ?? 200).json(deviceCoverage)
     }
     catch(error) {
         log('error getting device coverage')
