@@ -10,6 +10,9 @@
   },
   "license": "MIT",
   "private": false,
+  "engines": {
+    "node": "15.x"
+  },
   "dependencies": {
     "axios": "^0.19.2",
     "body-parser": "^1.19.0",
