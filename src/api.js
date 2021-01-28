@@ -97,6 +97,11 @@ async function createSimCheck(phoneNumber) {
 
 // Coverage / Countries
 
+/**
+ * Get product and network coverage by country code (e.g. GB) or phone number country prefix (e.g. 44).
+ * 
+ * @param {string} countryCode 
+ */
 async function getCountryCoverage(countryCode) {
     log('getCountryCoverage')
 
@@ -120,6 +125,11 @@ async function getCountryCoverage(countryCode) {
 
 // Coverage / Device
 
+/**
+ * Get product and network coverage by IP address.
+ * 
+ * @param {string} ipAddress the IP address of the device for which coverage is being queried
+ */
 async function getDeviceCoverage(ipAddress) {
     log('getIPCoverage')
 
@@ -148,6 +158,8 @@ async function getDeviceCoverage(ipAddress) {
 
 /**
  * Creates an Access Token withon `phone_check` scope.
+ * 
+ * @param scopes {Object} Optional. Array of scopes for the created access token. Defaults to `['phone_check sim_check coverage']`.
  */
 async function getAccessToken(scopes = ['phone_check sim_check coverage']) {
     log('getAccessToken')
