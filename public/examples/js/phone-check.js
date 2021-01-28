@@ -1,9 +1,9 @@
 window.tru = {}
 window.tru.ID = {}
 window.tru.ID.phoneCheck = function(checkUrl) {
-    console.log('truId:phoneCheck')
+    console.log('tru.ID:phoneCheck')
     if(!checkUrl) {
-        throw new Error('truId:phoneCheck: checkUrl is required')
+        throw new Error('tru.ID:phoneCheck: checkUrl is required')
     }
 
     return new Promise(function(resolve) {
