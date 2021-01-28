@@ -50,3 +50,8 @@
 #check_progress div {
     margin-bottom: 0.4em;
 }
+
+.form-row {
+    display: block;
+    margin-top: 1em;
+}

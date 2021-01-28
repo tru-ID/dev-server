@@ -27,9 +27,26 @@
 
     <div id="phone_check">
         <form id="phone_check_form" method="post" action="/phone-check">
-            <label for="phone_number">Phone Number</label>
-            <input id="phone_number" type="tel" name="phone_number" required />
-            <input type="submit" value="Verify my phone number" />
+            <div class="form-row">
+                <label for="phone_number">Phone Number</label>
+                <input id="phone_number" type="tel" name="phone_number" required />
+            </div>
+            <div class="form-row">
+                <label for="check_method">Check Method</label>
+                <div>
+                    <input type="radio" id="check_method_image" name="check_method" value="check_method_image"
+                        checked>
+                    <label for="check_method_image">image</label>
+                </div>
+                
+                <div>
+                    <input type="radio" id="check_method_window" name="check_method" value="check_method_window">
+                    <label for="check_method_window">window</label>
+                </div>
+            </div>
+            <div class="form-row">
+                <input type="submit" value="Verify my phone number" />
+            </div>
         </form>
 
         <div id="check_progress"></div>
