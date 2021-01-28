@@ -14,7 +14,12 @@ input {
     line-height: 1.6em;
 }
 
-p, li, dt, dd, code {
+button, input[type='submit'] {
+    line-height: 1.6em;
+    margin-top: 1em;
+}
+
+p, li, dt, dd, code, button {
     font-size: 16px;
     line-height: 1.4em;
 }
@@ -40,4 +45,17 @@ code {
 .top-nav {
     position: fixed;
     top: 20px;
+}
+
+.sub-text {
+    font-size: 0.7em;
+}
+
+.note {
+    border-top: 1px solid #EFEFEF;
+    border-bottom: 1px solid #EFEFEF;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+    font-size: 0.9em;
+    font-weight: 300;
 }

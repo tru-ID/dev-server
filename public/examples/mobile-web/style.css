@@ -1,0 +1,44 @@
+#checking_notice {
+    display: block;
+}
+
+#error_notice {
+    display: none;
+}
+
+.error #error_notice {
+    display: block;
+}
+
+.no-coverage #checking_notice,
+.has-coverage #checking_notice,
+.error #checking_notice {
+    display: none;
+}
+
+.loading #phone_check,
+.error #phone_check {
+    display: none;
+}
+
+.loading #wifi_notice {
+    display: none;
+}
+
+.no-coverage #phone_check,
+.error #phone_check {
+    display: none;
+}
+
+.has-coverage #wifi_notice,
+.error #wifi_notice {
+    display: none;
+}
+
+.no-coverage #wifi_notice {
+    display: block
+}
+
+.has-coverage #phone_check {
+    display: block;
+}
