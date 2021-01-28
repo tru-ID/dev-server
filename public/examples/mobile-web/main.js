@@ -49,6 +49,7 @@ async function checkCoverage() {
 async function phoneCheckFormSubmit(ev) {
     ev.preventDefault()
 
+    clearProgress()
     progressUpdate('Initiating Phone Verification')
     const phoneNumberEl = document.getElementById('phone_number')
     let phoneNumberValue = phoneNumberEl.value
@@ -65,7 +66,8 @@ async function phoneCheckFormSubmit(ev) {
             progressUpdate('Creating Mobile Data Session')
 
             // Execute the PhoneCheck
-            await tru.ID.phoneCheck(phoneCheckCreateResult.data.check_url)
+            const checkMethod = document.getElementById('check_method_image').checked? 'image': 'window'
+            await tru.ID.phoneCheck(phoneCheckCreateResult.data.check_url, {checkMethod: checkMethod, debug: true})
 
             // check_url has been navigated to and check completed.
             getPhoneCheckResult(phoneCheckCreateResult.data.check_id)
