@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mobile Web PhoneCheck</title>
+    <link rel="stylesheet" href="/style.css">
+
+    <style>
+        #checking_notice {
+            display: block;
+        }
+
+        #error_notice {
+            display: none;
+        }
+
+        .error #error_notice {
+            display: block;
+        }
+
+        .no-coverage #checking_notice,
+        .has-coverage #checking_notice,
+        .error #checking_notice {
+            display: none;
+        }
+
+        .loading #phone_check,
+        .error #phone_check {
+            display: none;
+        }
+
+        .loading #wifi_notice {
+            display: none;
+        }
+
+        .no-coverage #phone_check,
+        .error #phone_check {
+            display: none;
+        }
+
+        .has-coverage #wifi_notice,
+        .error #wifi_notice {
+            display: none;
+        }
+
+        .no-coverage #wifi_notice {
+            display: block
+        }
+
+        .has-coverage #phone_check {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="top-nav"><a href="/">⬅ back</a></nav>
+
+    <h1>Mobile Web PhoneCheck</h1>
+    <div id="checking_notice">
+        Checking your device coverage. Please wait.
+    </div>
+    <div id="wifi_notice">
+        You do not appear to be on a mobile data connection. Please <b>turn off your WiFi or connect to a mobile data network</b> and retry.
+        <button id="wifi_retry">Retry</button>
+    </div>
+    <div id="error_notice">
+        <div><span id="error_notice_message"></span> Please retry.</div>
+        <button id="error_retry">Retry</button>
+    </div>
+
+    <div id="phone_check">
+        <form id="phone_check_form" method="post" action="/phone-check">
+            <label for="phone_number">Phone Number</label>
+            <input id="phone_number" type="tel" name="phone_number" required />
+            <input type="submit" value="Verify my phone number" />
+        </form>
+
+        <div id="check_progress"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="../js/phone-check.js"></script>
+    <script>
+        function handleError(errorMessage) {
+            document.getElementById('error_notice_message').innerText = errorMessage
+            document.body.classList = ['error']
+        }
+
+        function progressUpdate(updateMsg) {
+            const el = document.getElementById('check_progress')
+            const updateEl = document.createElement('div')
+            updateEl.innerText = updateMsg
+            el.append(updateEl)
+        }
+
+        function clearProgress() {
+            document.getElementById('check_progress').innerHTML = ''
+        }
+
+        // Get coverage based on device IP.
+        // If there's no coverage then prompt the user to turn off WiFi if it's enabled and recheck.
+        async function checkCoverage() {
+            document.body.classList = ['loading']
+            clearProgress()
+
+            console.log('requesting coverage')
+            try {
+                const deviceCoverageResult = await axios.get('/device', {
+                    validateStatus: function (status) {
+                        return status >= 200 && status <= 404;
+                    },
+                })
+                console.log(deviceCoverageResult)
+
+                if(deviceCoverageResult.status === 200) {
+                    // tru.ID has coverage
+                    document.body.classList = ['has-coverage']
+                }
+                else if(deviceCoverageResult.status === 404) {
+                    // No coverage
+                    document.body.classList = ['no-coverage']
+                }
+            }
+            catch(ex) {
+                handleError('An error occurred while checking device coverage.')
+            }
+        }
+
+        async function phoneCheckFormSubmit(ev) {
+            ev.preventDefault()
+
+            progressUpdate('Initiating Phone Verification')
+            const phoneNumber = document.getElementById('phone_number').value
+            try {
+                const phoneCheckCreateResult = await axios.post('/phone-check', {phone_number: phoneNumber})
+                console.log(phoneCheckCreateResult)
+                if(phoneCheckCreateResult.status === 200) {
+                    progressUpdate('Creating Mobile Data Session')
+                    await truID.phoneCheck(phoneCheckCreateResult.data.check_url)
+
+                    getPhoneCheckResult(phoneCheckCreateResult.data.check_id)
+                }
+                else {
+                    console.error(phoneCheckFormSubmit)
+                    handleError('An error occurred while creating a PhoneCheck.')
+                }
+            }
+            catch(error) {
+                console.error(error)
+                handleError('An error occurred while creating a PhoneCheck.')
+            }
+        }
+
+        async function getPhoneCheckResult(checkId) {
+            try {
+                const phoneCheckResult = await axios.get(`/phone-check?check_id=${checkId}`)
+                console.log(phoneCheckResult)
+
+                progressUpdate(`Phone Number match: ${phoneCheckResult.data.match? '✅': '❌'}`)
+            }
+            catch(error) {
+                console.error(error)
+                handleError('An error occurred while retrieving the PhoneCheck result.')
+            }
+        }
+
+        document.getElementById('wifi_retry').addEventListener('click', checkCoverage, false)
+        document.getElementById('error_retry').addEventListener('click', checkCoverage, false)
+        document.getElementById('phone_check_form').addEventListener('submit', phoneCheckFormSubmit, false)
+
+        checkCoverage()
+    </script>
+</body>
+
+</html>
