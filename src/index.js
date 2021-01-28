@@ -194,6 +194,6 @@ function log() {
     }
 }
 
-app.listen(config.PORT, () => {
-    console.log(`Example app listening at http://localhost:${config.PORT}`)
+app.listen(config.port, () => {
+    console.log(`Example app listening at http://localhost:${config.port}`)
 })

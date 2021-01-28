@@ -11,7 +11,7 @@ const config = require('./config')
 async function createPhoneCheck(phoneNumber) {
     log('createPhoneCheck')
 
-    const url = `${config.API_BASE_URL}/phone_check/v0.1/checks`
+    const url = `${config.apiBaseUrl}/phone_check/v0.1/checks`
     const params = {
         phone_number: phoneNumber,
     }
@@ -43,7 +43,7 @@ async function createPhoneCheck(phoneNumber) {
 async function getPhoneCheck(checkId) {
     log('getPhoneCheck')
 
-    const url = `${config.API_BASE_URL}/phone_check/v0.1/checks/${checkId}`
+    const url = `${config.apiBaseUrl}/phone_check/v0.1/checks/${checkId}`
     const params = {}
 
     const auth = (await getAccessToken()).access_token
@@ -71,7 +71,7 @@ async function getPhoneCheck(checkId) {
 async function createSimCheck(phoneNumber) {
     log('createSimCheck')
 
-    const url = `${config.API_BASE_URL}/sim_check/v0.1/checks`
+    const url = `${config.apiBaseUrl}/sim_check/v0.1/checks`
     const params = {
         phone_number: phoneNumber,
     }
@@ -105,7 +105,7 @@ async function createSimCheck(phoneNumber) {
 async function getCountryCoverage(countryCode) {
     log('getCountryCoverage')
 
-    const url = `${config.API_BASE_URL}/coverage/v0.1/countries/${countryCode}`
+    const url = `${config.apiBaseUrl}/coverage/v0.1/countries/${countryCode}`
     const auth = (await getAccessToken(['coverage'])).access_token
     const requestHeaders = {
         Authorization: `Bearer ${auth}`
@@ -133,7 +133,7 @@ async function getCountryCoverage(countryCode) {
 async function getDeviceCoverage(ipAddress) {
     log('getIPCoverage')
 
-    const url = `${config.API_BASE_URL}/coverage/v0.1/device_ips/${ipAddress}`
+    const url = `${config.apiBaseUrl}/coverage/v0.1/device_ips/${ipAddress}`
     const auth = (await getAccessToken(['coverage'])).access_token
     const requestHeaders = {
         Authorization: `Bearer ${auth}`
@@ -164,7 +164,7 @@ async function getDeviceCoverage(ipAddress) {
 async function getAccessToken(scopes = ['phone_check sim_check coverage']) {
     log('getAccessToken')
 
-    const url = `${config.API_BASE_URL}/oauth2/v1/token`
+    const url = `${config.apiBaseUrl}/oauth2/v1/token`
     const params = qs.stringify({
         grant_type: 'client_credentials',
 
@@ -172,7 +172,7 @@ async function getAccessToken(scopes = ['phone_check sim_check coverage']) {
         scope: scopes
     })
 
-    const toEncode = `${config.PROJECT.credentials[0].client_id}:${config.PROJECT.credentials[0].client_secret}`
+    const toEncode = `${config.project.client_id}:${config.project.client_secret}`
     const auth = Buffer.from(toEncode).toString('base64')
     const requestHeaders = {
         Authorization: `Basic ${auth}`,
