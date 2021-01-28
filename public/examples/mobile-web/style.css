@@ -42,3 +42,11 @@
 .has-coverage #phone_check {
     display: block;
 }
+
+#check_progress {
+    margin-top: 1.5em;
+}
+
+#check_progress div {
+    margin-bottom: 0.4em;
+}

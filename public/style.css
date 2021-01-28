@@ -1,3 +1,7 @@
+body {
+    font-size: 16px;
+}
+
 h1, h2, h3 {
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }
@@ -12,15 +16,16 @@ body, p, form, input {
 
 input {
     line-height: 1.6em;
+    font-size: 1em;
 }
 
 button, input[type='submit'] {
     line-height: 1.6em;
     margin-top: 1em;
+    font-size: 1em;
 }
 
 p, li, dt, dd, code, button {
-    font-size: 16px;
     line-height: 1.4em;
 }
 
