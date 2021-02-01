@@ -67,7 +67,7 @@ async function phoneCheckFormSubmit(ev) {
 
             // Execute the PhoneCheck
             const checkMethod = document.getElementById('check_method_image').checked? 'image': 'window'
-            await tru.ID.phoneCheck(phoneCheckCreateResult.data.check_url, {checkMethod: checkMethod, debug: true})
+            await tru.ID.openCheckUrl(phoneCheckCreateResult.data.check_url, {checkMethod: checkMethod, debug: true})
 
             // check_url has been navigated to and check completed.
             getPhoneCheckResult(phoneCheckCreateResult.data.check_id)
@@ -100,5 +100,9 @@ async function getPhoneCheckResult(checkId) {
 document.getElementById('wifi_retry').addEventListener('click', checkCoverage, false)
 document.getElementById('error_retry').addEventListener('click', checkCoverage, false)
 document.getElementById('phone_check_form').addEventListener('submit', phoneCheckFormSubmit, false)
+
+const browser = bowser.getParser(window.navigator.userAgent);
+const info = `Browser: ${browser.getBrowserName()} ${browser.getBrowserVersion()} | OS: ${browser.getOSName()} ${browser.getOSVersion()}`
+document.getElementById('device_info').innerText = info
 
 checkCoverage()
