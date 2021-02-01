@@ -1,3 +1,7 @@
+body {
+    font-size: 16px;
+}
+
 h1, h2, h3 {
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }
@@ -12,9 +16,16 @@ body, p, form, input {
 
 input {
     line-height: 1.6em;
+    font-size: 1em;
 }
 
-p, li, dt, dd, code {
+button, input[type='submit'] {
+    line-height: 1.6em;
+    margin-top: 1em;
+    font-size: 1em;
+}
+
+p, li, dt, dd, code, button {
     line-height: 1.4em;
 }
 
@@ -23,7 +34,7 @@ dd {
 }
 
 body {
-    padding: 2em 5em;
+    padding: 2em;
 }
 
 form label {
@@ -39,4 +50,17 @@ code {
 .top-nav {
     position: fixed;
     top: 20px;
+}
+
+.sub-text {
+    font-size: 0.7em;
+}
+
+.note {
+    border-top: 1px solid #EFEFEF;
+    border-bottom: 1px solid #EFEFEF;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+    font-size: 0.9em;
+    font-weight: 300;
 }

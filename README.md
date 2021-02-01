@@ -38,8 +38,12 @@ If required, you can make configuration changes with the following environment v
 
 - `PORT` : change the port that the server listens on
 - `DEBUG` : determines whether debug information is logged via `console.log`
-- `CONFIG_PATH` : the path to the `tru.json` configuration file for the tru.ID project
+- `CONFIG_PATH` : the path to the `tru.json` configuration file for the tru.ID project. Not used if `TRU_CLIENT_ID` and `TRU_CLIENT_SECRET` are set.
 - `API_BASE_URL` : the tru.ID base URL. Defaults to `https://eu.api.tru.id`
+- `TRU_CLIENT_ID` : The `client_id` of a **tru.ID** project.
+- `TRU_CLIENT_SECRET` : The `client_secret` of a **tru.ID** project.
+- `USERNAME` : A username to be used with basic auth for the site
+- `PASSWORD` : A password to be used with basic auth for the site
 
 The server will attempt to load environment variables from a `.env` file in the root directory of the server.
 
@@ -71,4 +75,4 @@ yarn start
 ### Explore
 
 - View the code in [blob/main/src/index.js](blob/main/src/index.js)
-- The server exposes a basic homepage with some test pages that allow you to try out some functionality
+- The server exposes a basic homepage with some example pages that allow you to try out some functionality
