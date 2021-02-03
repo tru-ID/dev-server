@@ -2,7 +2,7 @@
   "name": "tru-node-server",
   "version": "0.1.0",
   "description": "An example tru.ID server implementation to support a client application ",
-  "main": "index.js",
+  "main": "src/server.js",
   "author": {
     "name": "tru.ID",
     "email": "community@tru.id",

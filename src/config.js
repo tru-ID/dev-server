@@ -1,5 +1,7 @@
 require('dotenv').config()
 
+console.log('Loading standard configuration')
+
 const PORT = process.env.PORT ?? 8080
 const DEBUG = process.env.DEBUG === undefined? true : process.env.DEBUG === 'true'
 const API_BASE_URL = process.env.API_BASE_URL ?? 'https://eu.api.tru.id'
@@ -25,5 +27,10 @@ module.exports = {
     project: {
         client_id: CLIENT_ID || projectConfig.credentials[0].client_id,
         client_secret: CLIENT_SECRET || projectConfig.credentials[0].client_secret
+    },
+    log: function() {
+        if(DEBUG) {
+            console.debug.apply(null, arguments)
+        }
     }
 }
