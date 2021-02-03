@@ -1,7 +1,11 @@
 {
   "name": "tru-node-server",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "An example tru.ID server implementation to support a client application ",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tru-ID/server-example-node.git"
+  },
   "main": "src/server.js",
   "author": {
     "name": "tru.ID",
@@ -20,13 +24,16 @@
     "express": "^4.17.1",
     "express-password-protect": "^1.0.2",
     "http-signature": "^1.3.4",
-    "jwks-rsa": "^1.9.0"
+    "jwks-rsa": "^1.9.0",
+    "localtunnel": "^2.0.1",
+    "standard-version": "^9.1.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"
   },
   "scripts": {
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "changelog": "standard-version"
   }
 }

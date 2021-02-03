@@ -37,7 +37,7 @@ function configure(_config) {
     return app
 }
 
-function serve(config) {
+async function serve(config) {
     const defaultConfig = require('./config')
     if(config) {
         // add any missing configuation from default config
@@ -51,6 +51,30 @@ function serve(config) {
     app.listen(config.port, () => {
         console.log(`Example app listening at http://localhost:${config.port}`)
     })
+
+    if(config.localtunnel.enabled) {
+        // https://github.com/localtunnel/localtunnel
+        async function startLocalTunnel() {
+            config.log('Starting localtunnel')
+            const localtunnel = require('localtunnel') 
+            const tunnel = await localtunnel({
+                port: config.port,
+                subdomain: config.localtunnel.subdomain
+            })
+            tunnel.on('request', (info) => {
+                console.log(info)
+            })
+            tunnel.on('error', (error) => {
+                console.error(error)
+            })
+            tunnel.on('close', () => {
+                console.log('localtunnel closing')
+            })
+            console.log(`localtunnel: ${tunnel.url}`)
+        }
+        
+        startLocalTunnel()
+    }
 }
 
 module.exports = {
