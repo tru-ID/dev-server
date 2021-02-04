@@ -166,11 +166,23 @@ Tag the version that is being released with the version of the package and, opti
 git tag v{version}@{tag}
 ```
 
+Push the update to the remote.
+
+```
+git push v{version}@{tag}
+```
+
 ### Publish to NPM
 
 To release a canary version run:
 
 ```
+yarn run publish:canary
+```
+
+## License
+
+[MIT](LICENSE)
 yarn publish:canary
 ```
 
