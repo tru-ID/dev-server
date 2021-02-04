@@ -41,6 +41,7 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "changelog": "standard-version"
+    "changelog": "standard-version",
+    "publish:canary": "npm publish --tag canary --access public"
   }
 }

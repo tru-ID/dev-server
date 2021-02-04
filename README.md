@@ -146,6 +146,14 @@ truDevServer.serve(config)
 }
 ```
 
+## Releasing
+
+To release a canary version run:
+
+```
+yarn publish:canary
+```
+
 ## License
 
 [MIT](LICENSE)
