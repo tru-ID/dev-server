@@ -1,7 +1,7 @@
 {
-  "name": "tru-node-server",
+  "name": "@tru_id/dev-server",
   "version": "0.1.1",
-  "description": "An example tru.ID server implementation to support a client application ",
+  "description": "An example tru.ID server to help with the tru.ID development process",
   "repository": {
     "type": "git",
     "url": "https://github.com/tru-ID/server-example-node.git"
@@ -30,6 +30,13 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.4"
+  },
+  "standard-version": {
+    "skip": {
+      "commit": true,
+      "tag": true,
+      "bump": true
+    }
   },
   "scripts": {
     "start": "node src/index.js",

@@ -7,7 +7,7 @@ const DEBUG = process.env.DEBUG === undefined? true : process.env.DEBUG === 'tru
 const API_BASE_URL = process.env.API_BASE_URL ?? 'https://eu.api.tru.id'
 const CLIENT_ID = process.env.TRU_ID_CLIENT_ID
 const CLIENT_SECRET = process.env.TRU_ID_CLIENT_SECRET
-const LOCALTUNNEL_ENABLED = process.env.LOCALTUNNEL_ENABLED? process.env.LOCALTUNNEL_ENABLED !== 'false' : true
+const LOCALTUNNEL_ENABLED = process.env.LOCALTUNNEL_ENABLED? process.env.LOCALTUNNEL_ENABLED === 'true' : false
 const LOCALTUNNEL_SUBDOMAIN = process.env.LOCALTUNNEL_SUBDOMAIN
 
 let projectConfig = null

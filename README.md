@@ -1,16 +1,19 @@
-# tru.ID Node Server Example
+# tru.ID Development Server
 
-The tru.ID Node Server provides basic example code to be used with client application.
+The **tru.ID** development server provides basic example code to be used with client application, runnable examples via served web pages and can be used to help with the **tru.ID** development process.
+
+The server can be used from **standalone** from source or installed and used as a **module**.
 
 ## Before you being
 
 You will need:
 
 - Node.JS installed
-- a [tru.ID](https://tru.id) account
-- a local tunnel solution if you wish to recieve Phone Check callbacks
+- a [**tru.ID**](https://tru.id) account
 
-## Getting Started
+## Using Standalone
+
+### Getting Started
 
 Clone or unzip the tru.ID Node Server into a directory.
 
@@ -32,7 +35,7 @@ or
 yarn install
 ```
 
-## Configuration
+### Configuration
 
 If required, you can make configuration changes with the following environment variables:
 
@@ -76,3 +79,73 @@ yarn start
 
 - View the code in [blob/main/src/index.js](blob/main/src/index.js)
 - The server exposes a basic homepage with some example pages that allow you to try out some functionality
+
+## Using as a Module
+
+### Install
+
+```
+npm install @tru_id/dev-server
+```
+
+or
+
+```
+yarn add @tru_id/dev-server
+```
+
+### Include and Use
+
+```
+const truDevServer = require('@tru_id/dev-server')
+truDevServer.serve(config)
+```
+
+## Configuration
+
+```js
+{
+    // Number. The port for the server to listen on. Defaults to 8080
+    port: PORT,
+
+    // Boolean. Whether debug output will be passed to the `log` function. Defaults to `true`
+    DEBUG: DEBUG,
+
+    // String. The base tru.ID URL. Defaults to 'https://eu.api.tru.id'
+    apiBaseUrl: API_BASE_URL,
+
+    // Optional. Set if the server should be password protected. Uses [express-password-protect](https://github.com/jdmann/express-password-protect)
+    basicAuth: {
+        username: USERNAME,
+        password: PASSWORD
+    },
+
+    // Object. The tru.ID project configuration to use.
+    project: {
+        // String. The `client_id` of the project. Defaults to loading from a local `tru.json`.
+        client_id: CLIENT_ID,
+        
+        // String. The `client_secret` of the project. Defaults to loading from a local `tru.json`.
+        client_secret: CLIENT_SECRET
+    },
+
+    // Object. Configuration for [localtunnel.me](https://github.com/localtunnel/localtunnel)
+    localtunnel: {
+        // Boolean. Whether localtunnel should be run to expose the running server to the public Internet. Defaults to false.
+        enabled: LOCALTUNNEL_ENABLED,
+
+        // String. A subdomain to use with localtunnel. No default. Note: you are not guaranteed to get the subdomain.
+        subdomain: LOCALTUNNEL_SUBDOMAIN
+    },
+    // Function. A function called with debug information when `DEBUG` is set to `true`. See below for default.
+    log: function() {
+        if(DEBUG) {
+            console.debug.apply(null, arguments)
+        }
+    }
+}
+```
+
+## License
+
+[MIT](LICENSE)
