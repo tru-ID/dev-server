@@ -148,6 +148,26 @@ truDevServer.serve(config)
 
 ## Releasing
 
+### CHANGELOG
+
+Ensure the `CHANGELOG.md` is updated:
+
+```
+yarn run changelog
+```
+
+Finesse the contents of `CHANGELOG.md` and commit.
+
+### Tag
+
+Tag the version that is being released with the version of the package and, optionally, the tag to be used in NPM:
+
+```
+git tag v{version}@{tag}
+```
+
+### Publish to NPM
+
 To release a canary version run:
 
 ```
