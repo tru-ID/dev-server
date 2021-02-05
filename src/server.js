@@ -1,3 +1,4 @@
+const path = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
 
@@ -29,7 +30,7 @@ function configure(_config) {
             res.redirect(referrer || '/')
         })
     }
-    app.use(express.static('public'))
+    app.use(express.static(path.join(__dirname, '..', 'public')))
 
     const routes = require('./routes')
     app.use(routes(config))
