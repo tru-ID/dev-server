@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [0.1.4](https://github.com/tru-ID/server-example-node/compare/v0.1.3...v0.1.4) (2021-02-05)
 
+### Bug Fixes
+
+* remove 'files' from package ([9438255](https://github.com/tru-ID/server-example-node/commit/943825553a4a78d40bf4c78af4be2c052d3d1a14))
+
 ### [0.1.3](https://github.com/tru-ID/server-example-node/compare/v0.1.2...v0.1.3) (2021-02-05)
 
 ### Bug Fixes
