@@ -150,7 +150,7 @@ truDevServer.serve(config)
 
 ### CHANGELOG
 
-Ensure the `CHANGELOG.md` is updated:
+Ensure the `CHANGELOG.md` is updated and update the package version:
 
 ```
 yarn run changelog

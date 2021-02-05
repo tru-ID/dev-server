@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2](https://github.com/tru-ID/server-example-node/compare/v0.1.1...v0.1.2) (2021-02-05)
+
+### Features
+
+* improving config handling ([ceef120](https://github.com/tru-ID/server-example-node/commit/ceef120652e31b8287d43de368bb7611677c4f3c))
+
+### Bug Fixes
+
+* ensure path to static folder is correct ([baffd35](https://github.com/tru-ID/server-example-node/commit/baffd3515a235f9f103d2557af6e5fc115d50e20))
+
 ### 0.1.1 (2021-02-03)
 
 ### Features
