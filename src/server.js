@@ -39,14 +39,7 @@ function configure(_config) {
 }
 
 async function serve(config) {
-    const defaultConfig = require('./config')
-    if(config) {
-        // add any missing configuation from default config
-        config = {...defaultConfig, ...config}
-    }
-    else {
-        config = defaultConfig
-    }
+    config = require('./config')(config)
     const app = configure(config)
 
     app.listen(config.port, () => {
