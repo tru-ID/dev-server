@@ -1,6 +1,12 @@
+
+function setStatus(status) {
+    console.log(status)
+    document.body.classList = [status]
+}
+
 function handleError(errorMessage) {
     document.getElementById('error_notice_message').innerText = errorMessage
-    document.body.classList = ['error']
+    setStatus('error')
 }
 
 function progressUpdate(updateMsg) {
@@ -16,7 +22,7 @@ function clearProgress() {
 
 // Get coverage based on device IP.
 async function checkCoverage() {
-    document.body.classList = ['loading']
+    setStatus('loading')
     clearProgress()
 
     console.log('requesting coverage')
@@ -31,11 +37,11 @@ async function checkCoverage() {
         // If there's no coverage then prompt the user to turn off WiFi if it's enabled and recheck.
         if(deviceCoverageResult.status === 200) {
             // tru.ID has coverage
-            document.body.classList = ['has-coverage']
+            setStatus('has-coverage')
         }
         else if(deviceCoverageResult.status === 404) {
             // No coverage
-            document.body.classList = ['no-coverage']
+            setStatus('no-coverage')
         }
         else {
             handleError('Unexpected result from device coverage check.')
