@@ -1,8 +1,6 @@
 const axios = require('axios')
 const qs = require('querystring')
 
-const config = require('./config')
-
 /**
  * Creates a PhoneCheck for the given `phoneNumber`.
  * 
@@ -198,11 +196,16 @@ function log() {
     }
 }
 
-module.exports = {
+const api = {
     createPhoneCheck: createPhoneCheck,
     getPhoneCheck: getPhoneCheck,
     createSimCheck: createSimCheck,
     getCountryCoverage: getCountryCoverage,
     getAccessToken: getAccessToken,
     getDeviceCoverage: getDeviceCoverage
+}
+
+module.exports = function(_config) {
+    config = _config
+    return api
 }

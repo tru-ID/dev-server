@@ -3,8 +3,8 @@ const router = Router()
 const jwksClient = require('jwks-rsa')
 const httpSignature = require('http-signature')
 const util = require('util')
-const api = require('./tru-api')
 
+let api = null
 let config = null
 
 // PhoneCheck
@@ -170,6 +170,8 @@ async function DeviceCoverage(req, res) {
 
 function routes(_config) {
     config = _config
+
+    api = require('./tru-api')(config)
 
     router.post('/check', phoneCheck)
     router.post('/phone-check', phoneCheck)
