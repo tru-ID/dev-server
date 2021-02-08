@@ -15,7 +15,7 @@ let config = null
 async function phoneCheck(req, res) {
 
     if(!req.body.phone_number) {
-        res.json({'error_message': 'phone_number parameter is required'}).status(400)
+        res.status(400).json({'error_message': 'phone_number parameter is required'})
         return
     }
 
@@ -32,7 +32,7 @@ async function phoneCheck(req, res) {
         config.log('error in /check')
         config.log(error.toString(), error.data)
 
-        res.send('Whoops!').status(500)
+        res.status(500).send('Whoops!')
     }
 
 }
@@ -42,7 +42,7 @@ async function phoneCheck(req, res) {
  */
 async function phoneCheckStatus(req, res) {
     if(!req.query.check_id) {
-        res.json({'error_message': 'check_id parameter is required'}).status(400)
+        res.status(400).json({'error_message': 'check_id parameter is required'})
         return
     }
 
@@ -57,7 +57,7 @@ async function phoneCheckStatus(req, res) {
         config.log('error in getting PhoneCheck status')
         config.log(error.toString(), error.data)
 
-        res.send('Whoops!').status(500)
+        res.status(500).send('Whoops!')
     }
 
 }
@@ -96,7 +96,7 @@ async function SimCheck(req, res) {
     const phoneNumber = req.body.phone_number || // application/json
                         req.form.phone_number    // application/x-www-form-urlencoded
     if(!phoneNumber) {
-        res.json({'error_message': 'phone_number parameter is required'}).status(400)
+        res.status(400).json({'error_message': 'phone_number parameter is required'})
         return
     }
 
@@ -114,7 +114,7 @@ async function SimCheck(req, res) {
         config.log('error in creating SIMCheck')
         config.log(error.toString(), error.data)
 
-        res.send('Whoops!').status(500)
+        res.status(500).send('Whoops!')
     }
 }
 
@@ -124,7 +124,7 @@ async function CountryCoverage(req, res) {
     const countryCode = req.query.country_code
 
     if(!countryCode) {
-        res.json({'error_message': 'country_code parameter is required'}).status(400)
+        res.status(400).json({'error_message': 'country_code parameter is required'})
         return
     }
 
@@ -139,7 +139,7 @@ async function CountryCoverage(req, res) {
         config.log('error getting country coverage')
         config.log(error.toString(), error.data)
 
-        res.send('Whoops!').status(500)
+        res.status(500).send('Whoops!')
     }
 }
 
@@ -150,7 +150,7 @@ async function DeviceCoverage(req, res) {
     const ipAddress = req.query.id_address || req.ip
 
     if(!ipAddress) {
-        res.json({'error_message': 'id_address parameter is required'}).status(400)
+        res.status(400).json({'error_message': 'id_address parameter is required'})
         return
     }
 
@@ -164,7 +164,7 @@ async function DeviceCoverage(req, res) {
         config.log('error getting device coverage')
         config.log(error.toString(), error.data)
 
-        res.send('Whoops!').status(500)
+        res.status(500).send('Whoops!')
     }
 }
 
