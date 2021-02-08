@@ -56,20 +56,21 @@ async function phoneCheckFormSubmit(ev) {
     ev.preventDefault()
 
     clearProgress()
-    progressUpdate('Initiating Phone Verification')
+    progressUpdate('✅ Initiating Phone Verification')
     const phoneNumberEl = document.getElementById('phone_number')
     let phoneNumberValue = phoneNumberEl.value
 
     // strip spaces out of the phone number and replace within input
     phoneNumberValue = phoneNumberValue.replace(/\s+/g, '')
     phoneNumberEl.value = phoneNumberValue
+    phoneNumberEl.blur()
 
     try {
         // Create PhoneCheck resource
         const phoneCheckCreateResult = await axios.post('/phone-check', {phone_number: phoneNumberValue})
         console.log(phoneCheckCreateResult)
         if(phoneCheckCreateResult.status === 200) {
-            progressUpdate('Creating Mobile Data Session')
+            progressUpdate('✅ Creating Mobile Data Session')
 
             // Execute the PhoneCheck
             const checkMethod = document.getElementById('check_method_image').checked? 'image': 'window'
@@ -95,7 +96,7 @@ async function getPhoneCheckResult(checkId) {
         const phoneCheckResult = await axios.get(`/phone-check?check_id=${checkId}`)
         console.log(phoneCheckResult)
 
-        progressUpdate(`Phone Number Verified: ${phoneCheckResult.data.match? '✅': '❌'}`)
+        progressUpdate(`${phoneCheckResult.data.match? '✅': '❌'} Phone Number Verified`)
     }
     catch(error) {
         console.error(error)

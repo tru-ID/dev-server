@@ -1,3 +1,13 @@
+body {
+    text-align: center;
+}
+
+#logo {
+    width: 100%;
+    max-width: 200px;
+    margin: auto;
+}
+
 #checking_notice {
     display: block;
 }
@@ -21,6 +31,10 @@
     display: none;
 }
 
+#phone_check {
+    margin-top: 20px;
+}
+
 .loading #wifi_notice {
     display: none;
 }
@@ -39,12 +53,25 @@
     display: block
 }
 
+label[for="phone_number"] {
+    font-weight: 600;
+}
+
+#phone_number {
+    padding: 10px;
+    font-size: 1em;
+    border-radius: 5px;
+    text-align: center;
+}
+
 .has-coverage #phone_check {
     display: block;
 }
 
 #check_progress {
     margin-top: 1.5em;
+    text-align: left;
+    padding-left: 10%;
 }
 
 #check_progress div {
@@ -58,5 +85,21 @@
 }
 
 #device_info {
-    margin-top: 1em;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    left: 0;
+    top: 5px;
+}
+
+input[type='submit'] {
+    padding: 10px;
+    color: #fff;
+    background-color: #00B5FF;
+    border: 0;
+    border-radius: 5px;
+}
+
+.hidden {
+    display: none;
 }

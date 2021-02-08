@@ -12,6 +12,8 @@
 <body>
     <nav class="top-nav"><a href="/">⬅ back</a></nav>
 
+    <img id="logo" src="/images/tru-vertical-square-dark-text.png" alt="tru.ID logo" />
+
     <h1>Mobile Web PhoneCheck</h1>
     <div id="checking_notice">
         <p>Checking your device coverage. Please wait.</p>
@@ -31,7 +33,8 @@
                 <label for="phone_number">Phone Number</label>
                 <input id="phone_number" type="tel" name="phone_number" required />
             </div>
-            <div class="form-row">
+            <!-- Radio button hidden for demo purposes. Remove 'hidden' class to allow selection of check method -->
+            <div class="form-row hidden">
                 <label for="check_method">Check Method</label>
                 <div>
                     <input type="radio" id="check_method_image" name="check_method" value="check_method_image"
