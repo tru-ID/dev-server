@@ -54,9 +54,10 @@ async function checkCoverage() {
 
 async function phoneCheckFormSubmit(ev) {
     ev.preventDefault()
-
+    setStatus('checking')
     clearProgress()
     progressUpdate('✅ Initiating Phone Verification')
+
     const phoneNumberEl = document.getElementById('phone_number')
     let phoneNumberValue = phoneNumberEl.value
 
@@ -97,6 +98,8 @@ async function getPhoneCheckResult(checkId) {
         console.log(phoneCheckResult)
 
         progressUpdate(`${phoneCheckResult.data.match? '✅': '❌'} Phone Number Verified`)
+
+        setStatus('has-coverage')
     }
     catch(error) {
         console.error(error)

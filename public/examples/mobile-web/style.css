@@ -22,7 +22,8 @@ body {
 
 .no-coverage #checking_notice,
 .has-coverage #checking_notice,
-.error #checking_notice {
+.error #checking_notice,
+.checking #checking_notice {
     display: none;
 }
 
@@ -35,7 +36,8 @@ body {
     margin-top: 20px;
 }
 
-.loading #wifi_notice {
+.loading #wifi_notice,
+.checking #wifi_notice {
     display: none;
 }
 
@@ -45,7 +47,8 @@ body {
 }
 
 .has-coverage #wifi_notice,
-.error #wifi_notice {
+.error #wifi_notice,
+.checking #wifi_notice {
     display: none;
 }
 
@@ -98,6 +101,10 @@ input[type='submit'] {
     background-color: #00B5FF;
     border: 0;
     border-radius: 5px;
+}
+
+.checking input[type='submit'] {
+    display: none;
 }
 
 .hidden {
