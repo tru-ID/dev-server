@@ -156,7 +156,11 @@ Ensure the `CHANGELOG.md` is updated and update the package version:
 yarn run changelog
 ```
 
-Finesse the contents of `CHANGELOG.md` and commit.
+Finesse the contents of `CHANGELOG.md` and commit with a message:
+
+```
+chore(release): v{version}
+```
 
 ### Tag
 

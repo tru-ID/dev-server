@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.6](https://github.com/tru-ID/server-example-node/compare/v0.1.4...v0.1.6) (2021-02-26)
+
+### Bug Fixes
+
+* loading project configuration from file ([15f4fa3](https://github.com/tru-ID/server-example-node/commit/15f4fa3d6da37ebc012b1227e88d6df2a751c499))
+* pass configuration to the tru API module ([775dc85](https://github.com/tru-ID/server-example-node/commit/775dc85e4f750cf1f0297e884bc988db03a58212))
+* routes should set status before calling send ([51669b2](https://github.com/tru-ID/server-example-node/commit/51669b21dc5c1eba089852c2dcb23d25e5d1e314))
+
 ### [0.1.4](https://github.com/tru-ID/server-example-node/compare/v0.1.3...v0.1.4) (2021-02-05)
 
 ### Bug Fixes
