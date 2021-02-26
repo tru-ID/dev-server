@@ -1,4 +1,5 @@
 const path = require('path')
+const { cwd } = require('process')
 require('dotenv').config()
 
 console.log('Loading standard configuration')
@@ -20,10 +21,6 @@ function configure(params) {
             username: process.env.USERNAME,
             password: process.env.PASSWORD
         },
-        project: {
-            client_id: CLIENT_ID,
-            client_secret: CLIENT_SECRET
-        },
         localtunnel: {
             enabled: LOCALTUNNEL_ENABLED,
             subdomain: LOCALTUNNEL_SUBDOMAIN
@@ -35,13 +32,24 @@ function configure(params) {
         }
     }
 
+    if(CLIENT_ID && CLIENT_SECRET) {
+        processConfig.project = {
+            client_id: CLIENT_ID,
+            client_secret: CLIENT_SECRET
+        }
+    }
+
     // Override config from process.env with those passed as parameters
     const config = {...processConfig, ...params}
 
     if(!config.project) {
-        const defaultProjectLocation = path(__dirname, '..', 'tru.json')
+        const defaultProjectLocation = path.join(cwd(), 'tru.json')
         console.log(`Loading tru.json project configuration from default location: "${defaultProjectLocation}"`)
-        config.project = require(process.env.PROJECT_PATH ?? defaultProjectLocation)
+        const projectConfig = require(process.env.PROJECT_PATH ?? defaultProjectLocation)
+        config.project = {
+            client_id: projectConfig.credentials[0].client_id,
+            client_secret: projectConfig.credentials[0].client_secret
+        }
     }
 
     return config
