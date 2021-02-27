@@ -1,15 +1,28 @@
 const axios = require('axios')
 const qs = require('querystring')
 
+const DEFAULT_SCOPES = [
+    'phone_check sim_check subscriber_check coverage'
+]
+
+// Check
+
+const CHECK_TYPES = {
+    PHONE: 'phone',
+    SIM: 'sim',
+    SUBSCRIBER: 'subscriber'
+}
+
 /**
- * Creates a PhoneCheck for the given `phoneNumber`.
+ * Creates a Check of a type for the given `phoneNumber`.
  * 
+ * @param {String} type - `phone`, `sim` or `subscriber` via `CHECK_TYPES`
  * @param {String} phoneNumber - The phone number to create a Phone Check for.
  */
-async function createPhoneCheck(phoneNumber) {
-    log('createPhoneCheck')
+async function createCheck(type, phoneNumber) {
+    log('createCheck')
 
-    const url = `${config.apiBaseUrl}/phone_check/v0.1/checks`
+    const url = `${config.apiBaseUrl}/${type}_check/v0.1/checks`
     const params = {
         phone_number: phoneNumber,
     }
@@ -24,24 +37,25 @@ async function createPhoneCheck(phoneNumber) {
     log('params', params)
     log('requestHeaders', requestHeaders)
 
-    const phoneCheckCreationResult = await axios.post(url, params, {
+    const checkCreationResult = await axios.post(url, params, {
         headers: requestHeaders
     })
 
-    log('phoneCheckCreationResult.data', phoneCheckCreationResult.data)
+    log('checkCreationResult.data', checkCreationResult.data)
 
-    return phoneCheckCreationResult.data
+    return checkCreationResult.data
 }
 
 /**
- * Retrieves a PhoneCheck with the given `check_id`
+ * Retrieves a Check of a provided `type` with the given `check_id`
  * 
+ * @param {String} type - Either `phone` or `subscriber`
  * @param {String} checkId The ID of the PhoneCheck to retrieve.
  */
-async function getPhoneCheck(checkId) {
-    log('getPhoneCheck')
+async function getCheck(type, checkId) {
+    log('getCheck')
 
-    const url = `${config.apiBaseUrl}/phone_check/v0.1/checks/${checkId}`
+    const url = `${config.apiBaseUrl}/${type}_check/v0.1/checks/${checkId}`
     const params = {}
 
     const auth = (await getAccessToken()).access_token
@@ -54,14 +68,62 @@ async function getPhoneCheck(checkId) {
     log('params', params)
     log('requestHeaders', requestHeaders)
 
-    const getPhoneCheckResult = await axios.get(url, {
+    const getCheckResult = await axios.get(url, {
         params: params,
         headers: requestHeaders
     })
 
-    log('getPhoneCheckResult.data', getPhoneCheckResult.data)
+    log('getCheckResult.data', getCheckResult.data)
 
-    return getPhoneCheckResult.data
+    return getCheckResult.data
+}
+
+// PhoneCheck
+
+/**
+ * Creates a PhoneCheck for the given `phoneNumber`.
+ * 
+ * @param {String} phoneNumber - The phone number to create a Phone Check for.
+ */
+async function createPhoneCheck(phoneNumber) {
+    log('createPhoneCheck')
+
+    return createCheck(CHECK_TYPES.PHONE, phoneNumber)
+}
+
+/**
+ * Retrieves a PhoneCheck with the given `check_id`
+ * 
+ * @param {String} checkId The ID of the PhoneCheck to retrieve.
+ */
+async function getPhoneCheck(checkId) {
+    log('getPhoneCheck')
+
+    return getCheck(CHECK_TYPES.PHONE, checkId)
+}
+
+// SubscriberCheck
+
+/**
+ * Creates a SubscriberCheck for the given `phoneNumber`.
+ * 
+ * @param {String} phoneNumber - The phone number to create a SubscriberCheck for.
+ */
+async function createSubscriberCheck(phoneNumber) {
+    log('createSubscriberCheck')
+
+    return createCheck(CHECK_TYPES.SUBSCRIBER, phoneNumber)
+}
+
+/**
+ * Retrieves a SubscriberCheck with the given `check_id`
+ * 
+ * @param {String} checkId The ID of the SubscriberCheck to retrieve.
+ */
+async function getSubscriberCheck(checkId) {
+    log('getSubscriberCheck')
+
+    return getCheck(CHECK_TYPES.SUBSCRIBER, checkId)
 }
 
 // SIMCheck
@@ -69,28 +131,7 @@ async function getPhoneCheck(checkId) {
 async function createSimCheck(phoneNumber) {
     log('createSimCheck')
 
-    const url = `${config.apiBaseUrl}/sim_check/v0.1/checks`
-    const params = {
-        phone_number: phoneNumber,
-    }
-
-    const auth = (await getAccessToken()).access_token
-    const requestHeaders = {
-        Authorization: `Bearer ${auth}`,
-        'Content-Type': 'application/json'
-    }
-
-    log('url', url)
-    log('params', params)
-    log('requestHeaders', requestHeaders)
-
-    const simCheckCreationResult = await axios.post(url, params, {
-        headers: requestHeaders
-    })
-
-    log('simCheckCreationResult.data', simCheckCreationResult.data)
-
-    return simCheckCreationResult.data
+    return createCheck(CHECK_TYPES.SIM, phoneNumber)
 }
 
 // Coverage / Countries
@@ -159,7 +200,7 @@ async function getDeviceCoverage(ipAddress) {
  * 
  * @param scopes {Object} Optional. Array of scopes for the created access token. Defaults to `['phone_check sim_check coverage']`.
  */
-async function getAccessToken(scopes = ['phone_check sim_check coverage']) {
+async function getAccessToken(scopes = DEFAULT_SCOPES) {
     log('getAccessToken')
 
     const url = `${config.apiBaseUrl}/oauth2/v1/token`
@@ -197,12 +238,14 @@ function log() {
 }
 
 const api = {
-    createPhoneCheck: createPhoneCheck,
-    getPhoneCheck: getPhoneCheck,
-    createSimCheck: createSimCheck,
-    getCountryCoverage: getCountryCoverage,
-    getAccessToken: getAccessToken,
-    getDeviceCoverage: getDeviceCoverage
+    createPhoneCheck,
+    getPhoneCheck,
+    createSubscriberCheck,
+    getSubscriberCheck,
+    createSimCheck,
+    getCountryCoverage,
+    getAccessToken,
+    getDeviceCoverage
 }
 
 module.exports = function(_config) {
