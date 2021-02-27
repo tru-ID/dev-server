@@ -87,8 +87,64 @@ async function phoneCheckCallback(req, res) {
     }
     res.sendStatus(200)
 }
-router.post('/callback', phoneCheckCallback)
-router.post('/phone-check/callback', phoneCheckCallback)
+
+// SubscriberCheck
+
+/**
+ * Handles a request to create a SubscriberCheck for the phone number within `req.body.phone_number`.
+ */
+async function subscriberCheck(req, res) {
+
+    if(!req.body.phone_number) {
+        res.status(400).json({'error_message': 'phone_number parameter is required'})
+        return
+    }
+
+    try {
+        const subscriberCheck = await api.createSubscriberCheck(req.body.phone_number)
+
+        // Select data to send to client
+        res.json({
+            check_id: subscriberCheck.check_id,
+            check_url: subscriberCheck._links.check_url.href
+        })
+    }
+    catch(error) {
+        config.log('error in /check')
+        config.log(error.toString(), error.data)
+
+        res.status(500).send('Whoops!')
+    }
+
+}
+
+/**
+ * Handle the request to check the state of a SubscriberCheck. `req.params.check_id` must contain a valid SubscriberCheck ID.
+ */
+async function subscriberCheckStatus(req, res) {
+    const checkId = req.params.check_id
+    if(!checkId) {
+        res.status(400).json({'error_message': 'check_id parameter is required'})
+        return
+    }
+
+    try {
+        const subscriberCheck = await api.getSubscriberCheck(checkId)
+        res.json({
+            match: subscriberCheck.match,
+            check_id: subscriberCheck.check_id,
+            no_sim_change: subscriberCheck.no_sim_change,
+            last_sim_change_at: subscriberCheck.last_sim_change_at       
+        })
+    }
+    catch(error) {
+        config.log('error in getting SubscriberCheck status')
+        config.log(error.toString(), error.data)
+
+        res.status(500).send('Whoops!')
+    }
+
+}
 
 // SIMCheck
 
@@ -182,6 +238,11 @@ function routes(_config) {
     router.post('/phone-check', phoneCheck)
     router.get('/check_status', phoneCheckStatus)
     router.get('/phone-check', phoneCheckStatus)
+    router.post('/callback', phoneCheckCallback)
+    router.post('/phone-check/callback', phoneCheckCallback)
+
+    router.post('/subscriber-check', subscriberCheck)
+    router.get('/subscriber-check/:check_id', subscriberCheckStatus)
 
     router.post('/sim-check', SimCheck)
 
