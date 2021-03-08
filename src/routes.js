@@ -167,6 +167,11 @@ async function DeviceCoverage(req, res) {
         res.status(500).send('Whoops!')
     }
 }
+                   
+// Helpers
+async function MyIp(req, res) {
+    res.status(200).json({ip_address: req.ip})
+}
 
 function routes(_config) {
     config = _config
@@ -182,6 +187,8 @@ function routes(_config) {
 
     router.get('/country', CountryCoverage)
     router.get('/device', DeviceCoverage)
+    
+    router.get('/my-ip', MyIp)
 
     return router
 }

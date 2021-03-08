@@ -173,7 +173,7 @@ git tag v{version}@{tag}
 Push the update to the remote.
 
 ```
-git push v{version}@{tag}
+git push origin v{version}@{tag}
 ```
 
 ### Publish to NPM
@@ -184,10 +184,10 @@ To release a canary version run:
 yarn run publish:canary
 ```
 
-## License
+To release a latest version:
 
-[MIT](LICENSE)
-yarn publish:canary
+```
+yarn run publish:latest
 ```
 
 ## License
