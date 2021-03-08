@@ -74,7 +74,7 @@ async function phoneCheckCallback(req, res) {
     const keyId = parsed.keyId
 
     const keyClient = jwksClient({
-        jwksUri: `${config.API_BASE_URL}/.well-known/jwks.json`
+        jwksUri: `${config.apiBaseUrl}/.well-known/jwks.json`
     })
     const getSigningKey = util.promisify(keyClient.getSigningKey)
 
