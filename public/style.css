@@ -41,6 +41,10 @@ form label {
     margin-right: 1em;
 }
 
+pre > code {
+    display: block;
+}
+
 code {
     background-color: #0a0a32;
     color: #FF8F1F;
