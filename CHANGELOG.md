@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.7](https://github.com/tru-ID/server-example-node/compare/v0.1.6...v0.1.7) (2021-03-11)
+
+
+### Features
+
+* add /my-ip to get the IP address of the device making the request to the endpoint ([e1d76b7](https://github.com/tru-ID/server-example-node/commit/e1d76b761a5da6028777cc534363d57a0fa90d01))
+
+
+### Bug Fixes
+
+* **routes:** config.API_BASE_URL -> config.apiBaseUrl ([985e7fc](https://github.com/tru-ID/server-example-node/commit/985e7fccd5fb99aed7e6cf4dcea87f9859912ef1))
+
 ### [0.1.6](https://github.com/tru-ID/server-example-node/compare/v0.1.5...v0.1.6) (2021-02-27)
 
 ### Features
