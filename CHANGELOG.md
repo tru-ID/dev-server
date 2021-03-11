@@ -2,8 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [0.1.7](https://github.com/tru-ID/server-example-node/compare/v0.1.6...v0.1.7) (2021-03-11)
+### [0.1.8](https://github.com/tru-ID/server-example-node/compare/v0.1.7...v0.1.8) (2021-03-11)
 
+### Bug Fixes
+
+* Adding SubscriberCheck endpoints back that were lost in the v0.1.7 release.
+
+### Features
+
+* adding SubscriberCheck endpoints ([545c6a6](https://github.com/tru-ID/server-example-node/commit/545c6a670e4c4147b7c34f06c2ddbe0cf34bff1d))
+
+### [0.1.7](https://github.com/tru-ID/server-example-node/compare/v0.1.6...v0.1.7) (2021-03-11)
 
 ### Features
 
