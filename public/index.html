@@ -31,23 +31,36 @@
         <dd>to handle a PhoneCheck callback from the <b>tru.ID</b> platform</dd>
     </dl>
 
+    <h3>SubscriberCheck</h3>
+    <dl>
+        <dt><code>POST /subscriber-check</code></dt>
+        <dd>to create a SubscriberCheck resource</dd>
+
+        <dt><code>GET /subscriber-check</code></dt>
+        <dd>to get a SubscriberCheck resource</dd>
+    </dl>
+
     <h3>SIMCheck</h3>
     <p>
         The <b>tru.ID</b> SIMCheck API provides information on when a SIM card associated with a mobile phone number was last changed.
         This can be used when augmenting existing 2FA or anti-fraud workflows.
     </p>
-    <ul>
-        <li><code>POST /sim-check</code> to create a SIMCheck</li>
-    </ul>
+    <dl>
+        <dt><code>POST /sim-check</code></dt>
+        <dd>to create a SIMCheck</dd>
+    </dl>
 
     <h3>Coverage</h3>
     <p>
         The <b>tru.ID</b> Coverage API provides two endpoints exposing reachability information for the platform and devices.
     </p>
-    <ul>
-        <li><code>GET /countries/{country_code}</code> get platform coverage based on a country code</li>
-        <li><code>GET /device_ips/{ip}</code> get the mobile network that a device is on along with products that are supported based on device IP address</li>
-    </ul>
+    <dl>
+        <dt><code>GET /countries/{country_code}</code></dt>
+        <dd>get platform coverage based on a country code</dd>
+
+        <dt><code>GET /device_ips/{ip}</code></dt>
+        <dd>get the mobile network that a device is on along with products that are supported based on device IP address</dd>
+    </dl>
 
     <h3>Device IP Address (Helper)</h3>
     <p>
