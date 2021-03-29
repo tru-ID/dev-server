@@ -149,8 +149,9 @@ async function subscriberCheckStatus(req, res) {
 // SIMCheck
 
 async function SimCheck(req, res) {
-    const phoneNumber = req.body.phone_number || // application/json
-                        req.form.phone_number    // application/x-www-form-urlencoded
+    console.log(req.body)
+    const phoneNumber = req.body.phone_number
+
     if(!phoneNumber) {
         res.status(400).json({'error_message': 'phone_number parameter is required'})
         return
@@ -226,7 +227,9 @@ async function DeviceCoverage(req, res) {
                    
 // Helpers
 async function MyIp(req, res) {
-    res.status(200).json({ip_address: req.ip})
+    const ipResponse = {ip_address: req.ip}
+    config.log('MyIp', ipResponse)
+    res.status(200).json(ipResponse)
 }
 
 function routes(_config) {
