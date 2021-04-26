@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.9](https://github.com/tru-ID/server-example-node/compare/v0.1.8...v0.1.9) (2021-04-26)
+
+
+### Bug Fixes
+
+* change required Node.js version from 15.x. to >=12.0.0
+* remove req.form.phone_number in /sim-check ([73827b8](https://github.com/tru-ID/server-example-node/commit/73827b85721ad7c1650e8a1ac2191b56a24ee36a))
+
 ### [0.1.8](https://github.com/tru-ID/server-example-node/compare/v0.1.7...v0.1.8) (2021-03-11)
 
 ### Bug Fixes
