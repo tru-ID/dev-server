@@ -96,7 +96,7 @@ yarn add @tru_id/dev-server
 
 ### Include and Use
 
-```
+```js
 const truDevServer = require('@tru_id/dev-server')
 truDevServer.serve(config)
 ```
@@ -138,9 +138,9 @@ truDevServer.serve(config)
         subdomain: LOCALTUNNEL_SUBDOMAIN
     },
     // Function. A function called with debug information when `DEBUG` is set to `true`. See below for default.
-    log: function(...args) {
+    log: (...args) => {
         if(DEBUG) {
-            console.debug.call(...args)
+            console.debug(...args)
         }
     }
 }
