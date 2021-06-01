@@ -99,7 +99,10 @@ async function phoneCheckFormSubmit(ev) {
       await tru.ID.openCheckUrl(phoneCheckCreateResult.data.check_url, {
         checkMethod,
         debug: true,
-        force: true,
+        // we don't care here as we are already doing
+        // the device coverage check automatically on page load
+        // through the node server
+        checkDeviceCoverage: false,
       })
 
       // check_url has been navigated to and check completed.
