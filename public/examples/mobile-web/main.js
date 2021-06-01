@@ -40,12 +40,15 @@ async function checkCoverage() {
       setStatus('no-coverage')
     } else if (deviceCoverageResult.status === 412) {
       // No coverage
-      setStatus('no-coverage')
+      setStatus('no-mobile-ip')
     } else {
       handleError('Unexpected result from device coverage check.')
     }
   } catch (ex) {
     handleError('An error occurred while checking device coverage.')
+  } finally {
+    const phoneCheckBox = document.getElementById('phone_check')
+    phoneCheckBox.classList.remove('hidden')
   }
 }
 

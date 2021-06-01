@@ -24,14 +24,14 @@
     <div id="checking_notice">
       <p>Checking your device coverage. Please wait.</p>
     </div>
-    <div id="wifi_notice">
+    <div id="wifi_notice" class="hidden">
       <p>
         You do not appear to be on a mobile data connection. Please
         <b>turn off your WiFi or connect to a mobile data network</b> and retry.
       </p>
       <button id="wifi_retry">Retry</button>
     </div>
-    <div id="no_coverage_notice">
+    <div id="no_coverage_notice" class="hidden">
       <p>
         Your Mobile Network is not supported. If you think this is a mistake you
         can still try to verify your phone number
@@ -43,7 +43,7 @@
       <button id="error_retry">Retry</button>
     </div>
 
-    <div id="phone_check">
+    <div id="phone_check" class="hidden">
       <form id="phone_check_form" method="post" action="/phone-check">
         <div class="form-row">
           <label for="phone_number">Phone Number</label>

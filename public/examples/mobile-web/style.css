@@ -53,17 +53,17 @@ body {
 }
 
 .no-coverage #wifi_notice {
-  display: block;
+  display: none;
 }
 .no-coverage #no_coverage_notice {
-  display: none;
+  display: block;
 }
 
 .no-mobile-ip #no_coverage_notice {
-  display: block;
+  display: none;
 }
 .no-mobile-ip #wifi_notice {
-  display: none;
+  display: block;
 }
 
 label[for='phone_number'] {
