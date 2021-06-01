@@ -14,8 +14,6 @@ const LOCALTUNNEL_ENABLED = process.env.LOCALTUNNEL_ENABLED
   ? process.env.LOCALTUNNEL_ENABLED === 'true'
   : false
 const { LOCALTUNNEL_SUBDOMAIN, PROJECT_PATH } = process.env
-const defaultProjectLocation = path.join(cwd(), 'tru.json')
-const projectConfig = require(PROJECT_PATH ?? defaultProjectLocation)
 
 function configure(params) {
   const processConfig = {
@@ -48,6 +46,8 @@ function configure(params) {
   const config = { ...processConfig, ...params }
 
   if (!config.project) {
+    const defaultProjectLocation = path.join(cwd(), 'tru.json')
+    const projectConfig = require(PROJECT_PATH ?? defaultProjectLocation)
     console.log(
       `Loading tru.json project configuration from default location: "${defaultProjectLocation}"`,
     )
