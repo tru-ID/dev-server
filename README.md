@@ -69,7 +69,7 @@ $ tru projects:update --phonecheck-callback {local_tunnel_url}/phone-check/callb
 npm start
 ```
 
-or 
+or
 
 ```
 yarn start
@@ -96,7 +96,7 @@ yarn add @tru_id/dev-server
 
 ### Include and Use
 
-```
+```js
 const truDevServer = require('@tru_id/dev-server')
 truDevServer.serve(config)
 ```
@@ -124,7 +124,7 @@ truDevServer.serve(config)
     project: {
         // String. The `client_id` of the project. Defaults to loading from a local `tru.json`.
         client_id: CLIENT_ID,
-        
+
         // String. The `client_secret` of the project. Defaults to loading from a local `tru.json`.
         client_secret: CLIENT_SECRET
     },
@@ -138,9 +138,9 @@ truDevServer.serve(config)
         subdomain: LOCALTUNNEL_SUBDOMAIN
     },
     // Function. A function called with debug information when `DEBUG` is set to `true`. See below for default.
-    log: function() {
+    log: (...args) => {
         if(DEBUG) {
-            console.debug.apply(null, arguments)
+            console.debug(...args)
         }
     }
 }
