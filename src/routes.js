@@ -13,7 +13,7 @@ let config = null
 /**
  * Handles a request to create a PhoneCheck for the phone number within `req.body.phone_number`.
  */
-async function phoneCheck(req, res) {
+async function createPhoneCheck(req, res) {
   if (!req.body.phone_number) {
     res
       .status(400)
@@ -40,7 +40,7 @@ async function phoneCheck(req, res) {
 /**
  * Handle the request to check the state of a Phone Check. `req.query.check_id` must contain a valid Phone Check ID.
  */
-async function phoneCheckStatus(req, res) {
+async function getPhoneCheckStatus(req, res) {
   if (!req.query.check_id) {
     res.status(400).json({ error_message: 'check_id parameter is required' })
     return
@@ -89,7 +89,7 @@ async function phoneCheckCallback(req, res) {
 /**
  * Handles a request to create a SubscriberCheck for the phone number within `req.body.phone_number`.
  */
-async function subscriberCheck(req, res) {
+async function createSubscriberCheck(req, res) {
   if (!req.body.phone_number) {
     res
       .status(400)
@@ -118,7 +118,7 @@ async function subscriberCheck(req, res) {
 /**
  * Handle the request to check the state of a SubscriberCheck. `req.params.check_id` must contain a valid SubscriberCheck ID.
  */
-async function subscriberCheckStatus(req, res) {
+async function getSubscriberCheckStatus(req, res) {
   const checkId = req.params.check_id
   if (!checkId) {
     res.status(400).json({ error_message: 'check_id parameter is required' })
@@ -143,7 +143,7 @@ async function subscriberCheckStatus(req, res) {
 
 // SIMCheck
 
-async function SimCheck(req, res) {
+async function createSimCheck(req, res) {
   console.log(req.body)
   const phoneNumber = req.body.phone_number
 
@@ -173,7 +173,7 @@ async function SimCheck(req, res) {
 
 // Country
 
-async function CountryCoverage(req, res) {
+async function getCountryCoverage(req, res) {
   const countryCode = req.query.country_code
 
   if (!countryCode) {
@@ -199,7 +199,7 @@ async function CountryCoverage(req, res) {
 
 // Device
 
-async function DeviceCoverage(req, res) {
+async function getDeviceCoverage(req, res) {
   const ipAddress = req.query.id_address || req.ip
 
   if (!ipAddress) {
@@ -220,8 +220,13 @@ async function DeviceCoverage(req, res) {
   }
 }
 
+async function traces(req, res) {
+  console.log(JSON.stringify(req.body, null, 2))
+  res.sendStatus(200)
+}
+
 // Helpers
-async function MyIp(req, res) {
+async function getMyIp(req, res) {
   const ipResponse = { ip_address: req.ip }
   config.log('MyIp', ipResponse)
   res.status(200).json(ipResponse)
@@ -232,22 +237,24 @@ function routes(_config) {
 
   api = createApi(config)
 
-  router.post('/check', phoneCheck)
-  router.post('/phone-check', phoneCheck)
-  router.get('/check_status', phoneCheckStatus)
-  router.get('/phone-check', phoneCheckStatus)
+  router.post('/check', createPhoneCheck)
+  router.post('/phone-check', createPhoneCheck)
+  router.get('/check_status', getPhoneCheckStatus)
+  router.get('/phone-check', getPhoneCheckStatus)
   router.post('/callback', phoneCheckCallback)
   router.post('/phone-check/callback', phoneCheckCallback)
 
-  router.post('/subscriber-check', subscriberCheck)
-  router.get('/subscriber-check/:check_id', subscriberCheckStatus)
+  router.post('/subscriber-check', createSubscriberCheck)
+  router.get('/subscriber-check/:check_id', getSubscriberCheckStatus)
 
-  router.post('/sim-check', SimCheck)
+  router.post('/sim-check', createSimCheck)
 
-  router.get('/country', CountryCoverage)
-  router.get('/device', DeviceCoverage)
+  router.get('/country', getCountryCoverage)
+  router.get('/device', getDeviceCoverage)
 
-  router.get('/my-ip', MyIp)
+  router.get('/my-ip', getMyIp)
+
+  router.post('/traces', traces)
 
   return router
 }
