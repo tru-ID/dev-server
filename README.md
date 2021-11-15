@@ -39,14 +39,17 @@ yarn install
 
 If required, you can make configuration changes with the following environment variables:
 
-- `PORT` : change the port that the server listens on
-- `DEBUG` : determines whether debug information is logged via `console.log`
+- `PORT` : change the port that the server listens on.
+- `DEBUG` : determines whether debug information is logged via `console.log`.
 - `CONFIG_PATH` : the path to the `tru.json` configuration file for the tru.ID project. Not used if `TRU_CLIENT_ID` and `TRU_CLIENT_SECRET` are set.
-- `API_BASE_URL` : the tru.ID base URL. Defaults to `https://eu.api.tru.id`
+- `API_BASE_URL` : the tru.ID base URL. Defaults to `https://eu.api.tru.id` (`https://in.api.tru.id` is also available)
 - `TRU_CLIENT_ID` : The `client_id` of a **tru.ID** project.
 - `TRU_CLIENT_SECRET` : The `client_secret` of a **tru.ID** project.
-- `USERNAME` : A username to be used with basic auth for the site
-- `PASSWORD` : A password to be used with basic auth for the site
+- `USERNAME` : A username to be used with basic auth for the site.
+- `PASSWORD` : A password to be used with basic auth for the site.
+- `NGROK_SUBDOMAIN` : If you have ngrok premium membership, you can define your ngrok subdomain here.
+- `NGROK_AUTHTOKEN` : Your ngrok auth token found in the [ngrok dashboard](https://dashboard.ngrok.com/get-started/setup)
+- `NGROK_REGION` : The `region` the ngrok tunnel is set up in.
 
 The server will attempt to load environment variables from a `.env` file in the root directory of the server.
 
@@ -57,10 +60,10 @@ If you wish to receive Phone Check HTTP callbacks when the Phone Check enters an
 1. Run a local tunnel solution to expose your local running server to the Internet
 2. Configure your Project to have a `phonecheck_callback_url
 
-From the project directory run the following command replacing `{local_tunnel_url}` with the URL exposing your localhost server to the Internet:
+From the project directory run the following command replacing `{ngrok_url}` with the URL exposing your localhost server to the Internet:
 
 ```
-$ tru projects:update --phonecheck-callback {local_tunnel_url}/phone-check/callback
+$ tru projects:update --phonecheck-callback {ngrok_url}/phone-check/callback
 ```
 
 ### Run the server
@@ -128,7 +131,20 @@ truDevServer.serve(config)
         // String. The `client_secret` of the project. Defaults to loading from a local `tru.json`.
         client_secret: CLIENT_SECRET
     },
+    // Object. Configuration for [ngrok.com](https://ngrok.com/)
+    ngrok: {
+        // Boolean. Whether ngrok should be run to expose the running server to the public Internet. Defaults to false.
+        enabled: NGROK_ENABLED,
 
+        // String. A subdomain to use with ngrok. No default. Note: unless you have a premium membership you cannot get a defined subdomain.
+        sundomain: NGROK_SUBDOMAIN,
+
+        // String. Your ngrok auth token found in the [ngrok dashboard](https://dashboard.ngrok.com/get-started/setup).
+        authtoken: NGROK_AUTHTOKEN,
+
+        // String. Choice of location where the ngrok client will connect to host its tunnels.
+        region: NGROK_REGION
+    },
     // Object. Configuration for [localtunnel.me](https://github.com/localtunnel/localtunnel)
     localtunnel: {
         // Boolean. Whether localtunnel should be run to expose the running server to the public Internet. Defaults to false.
