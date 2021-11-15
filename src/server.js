@@ -49,7 +49,9 @@ async function serve(customConfig) {
       subdomain: config.ngrok.subdomain, // reserved tunnel name https://alex.ngrok.io
       authtoken: config.ngrok.authtoken, // your authtoken from ngrok.com
       region: 'us', // one of ngrok regions (us, eu, au, ap, sa, jp, in), defaults to us
-      onStatusChange: status => {},
+      onStatusChange: status => {
+        console.log(`ngrok status change: ${status}`)
+      },
     });
 
     console.log(`ngrok: ${url}`)
