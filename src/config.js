@@ -19,7 +19,7 @@ const LOCALTUNNEL_SUBDOMAIN = process.env
 const NGROK_ENABLED = process.env.NGROK_ENABLED
   ? process.env.NGROK_ENABLED === 'true'
   : false
-const {NGROK_SUBDOMAIN, NGROK_AUTHTOKEN} = process.env
+const {NGROK_SUBDOMAIN, NGROK_AUTHTOKEN, NGROK_REGION} = process.env
 
 function configure(params) {
   const processConfig = {
@@ -38,6 +38,7 @@ function configure(params) {
       enabled: NGROK_ENABLED,
       subdomain: NGROK_SUBDOMAIN,
       authtoken: NGROK_AUTHTOKEN,
+      region: NGROK_REGION,
     },
     log: (...args) => {
       if (DEBUG) {

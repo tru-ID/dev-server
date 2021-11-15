@@ -48,7 +48,7 @@ async function serve(customConfig) {
       addr: config.port, // port or network address, defaults to 80
       subdomain: config.ngrok.subdomain, // reserved tunnel name https://alex.ngrok.io
       authtoken: config.ngrok.authtoken, // your authtoken from ngrok.com
-      region: 'us', // one of ngrok regions (us, eu, au, ap, sa, jp, in), defaults to us
+      region: config.ngrok.region, // ngrok region for your tunnel
       onStatusChange: status => {
         console.log(`ngrok status change: ${status}`)
       },
