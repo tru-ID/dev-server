@@ -10,15 +10,16 @@ const DEBUG =
 const API_BASE_URL = process.env.API_BASE_URL ?? 'https://eu.api.tru.id'
 const CLIENT_ID = process.env.TRU_ID_CLIENT_ID
 const CLIENT_SECRET = process.env.TRU_ID_CLIENT_SECRET
+const {PROJECT_PATH} = process.env
 const LOCALTUNNEL_ENABLED = process.env.LOCALTUNNEL_ENABLED
   ? process.env.LOCALTUNNEL_ENABLED === 'true'
   : false
-const { LOCALTUNNEL_SUBDOMAIN, PROJECT_PATH } = process.env
+const LOCALTUNNEL_SUBDOMAIN = process.env
 
 const NGROK_ENABLED = process.env.NGROK_ENABLED
   ? process.env.NGROK_ENABLED === 'true'
   : false
-const { NGROK_SUBDOMAIN, PROJECT_PATH } = process.env
+const {NGROK_SUBDOMAIN, NGROK_AUTHTOKEN} = process.env
 
 function configure(params) {
   const processConfig = {
