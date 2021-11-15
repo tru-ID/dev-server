@@ -15,6 +15,11 @@ const LOCALTUNNEL_ENABLED = process.env.LOCALTUNNEL_ENABLED
   : false
 const { LOCALTUNNEL_SUBDOMAIN, PROJECT_PATH } = process.env
 
+const NGROK_ENABLED = process.env.NGROK_ENABLED
+  ? process.env.NGROK_ENABLED === 'true'
+  : false
+const { NGROK_SUBDOMAIN, PROJECT_PATH } = process.env
+
 function configure(params) {
   const processConfig = {
     port: PORT,
@@ -27,6 +32,11 @@ function configure(params) {
     localtunnel: {
       enabled: LOCALTUNNEL_ENABLED,
       subdomain: LOCALTUNNEL_SUBDOMAIN,
+    },
+    ngrok: {
+      enabled: NGROK_ENABLED,
+      subdomain: NGROK_SUBDOMAIN,
+      authtoken: NGROK_AUTHTOKEN,
     },
     log: (...args) => {
       if (DEBUG) {
