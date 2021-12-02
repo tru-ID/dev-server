@@ -45,8 +45,8 @@
   "scripts": {
     "prettier": "prettier ./src ./public --write",
     "lint": "eslint .",
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "changelog": "standard-version",
     "publish:latest": "npm publish --access public",
     "publish:canary": "npm publish --tag canary --access public"

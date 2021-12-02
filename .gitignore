@@ -2,3 +2,4 @@ node_modules
 tru.json
 .vscode/
 .env
+fly.toml
