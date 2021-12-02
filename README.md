@@ -69,29 +69,6 @@ There are two ways you can run this `dev-server` for testing with, the first one
 
 To deploy the `dev-server` remotely, install the [Flyctl](https://fly.io/docs/getting-started/installing-flyctl/) CLI. This CLI provides functionality for signing up, logging in, and deploying.
 
- ```bash
-# Linux and MacOS
-curl -L https://fly.io/install.sh | sh
-# Windows
-iwr https://fly.io/install.ps1 -useb | iex
-```
-
-##### Sign-up
-
-To sign up for an account, run the command below. This command will open a new browser prompting you for key authentication credentials.
-
-```bash
-flyctl auth signup
-```
-
-##### Log In
-
-To log in to your account, run the command below. Again, this command will open a new browser tab prompting you for your authentication credentials.
-
-```bash
-flyctl auth login
-```
-
 ##### Environment Variables
 
 Two environment variables are required `TRU_ID_CLIENT_ID` and `TRU_ID_CLIENT_SECRET`, which can be found in your `tru.json` file. These are needed to verify the checks. So run the command below to register these in your Fly.io project:
