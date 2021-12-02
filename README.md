@@ -43,8 +43,8 @@ If required, you can make configuration changes with the following environment v
 - `DEBUG` : determines whether debug information is logged via `console.log`
 - `CONFIG_PATH` : the path to the `tru.json` configuration file for the tru.ID project. Not used if `TRU_CLIENT_ID` and `TRU_CLIENT_SECRET` are set.
 - `API_BASE_URL` : the tru.ID base URL. Defaults to `https://eu.api.tru.id`
-- `TRU_CLIENT_ID` : The `client_id` of a **tru.ID** project.
-- `TRU_CLIENT_SECRET` : The `client_secret` of a **tru.ID** project.
+- `TRU_ID_CLIENT_ID` : The `client_id` of a **tru.ID** project.
+- `TRU_ID_CLIENT_SECRET` : The `client_secret` of a **tru.ID** project.
 - `USERNAME` : A username to be used with basic auth for the site
 - `PASSWORD` : A password to be used with basic auth for the site
 
@@ -64,6 +64,59 @@ $ tru projects:update --phonecheck-callback {local_tunnel_url}/phone-check/callb
 ```
 
 ### Run the server
+
+There are two ways you can run this `dev-server` for testing with, the first one is to deploy it to a sevice such as [Fly.io](https://www.fly.io). Or the `dev-server` could be run locally, needing a service such as [Ngrok](https://ngrok.com/) or [LocalTunnel](https://github.com/localtunnel/localtunnel) to expose the server to the Internet.
+
+#### Remote via Fly.io
+
+[Fly.io](https://www.fly.io) is a Platform-as-a-Service (PaaS) allowing developers to deploy full stack applications with minimal effort.
+
+To deploy the `dev-server` remotely, install the [Flyctl](https://fly.io/docs/getting-started/installing-flyctl/) CLI. This CLI provides functionality for signing up, logging in, and deploying.
+
+ ```bash
+# Linux and MacOS
+curl -L https://fly.io/install.sh | sh
+# Windows
+iwr https://fly.io/install.ps1 -useb | iex
+```
+
+##### Sign-up
+
+To sign up for an account, run the command below. This command will open a new browser prompting you for key authentication credentials.
+
+```bash
+flyctl auth signup
+```
+
+##### Log In
+
+To log in to your account, run the command below. Again, this command will open a new browser tab prompting you for your authentication credentials.
+
+```bash
+flyctl auth login
+```
+
+##### Environment Variables
+
+Two environment variables are required `TRU_ID_CLIENT_ID` and `TRU_ID_CLIENT_SECRET`, which can be found in your `tru.json` file. These are needed to verify the checks. So run the command below to register these in your Fly.io project:
+
+```bash
+flyctl secrets set TRU_ID_CLIENT_ID=<YOUR_CLIENT_ID> TRU_ID_CLIENT_SECRET=<YOUR_CLIENT_SECRET>
+```
+
+##### Deploy
+
+Running `flyctl launch` will prompt you for some pieces of information about your application, including the region you wish this to be deployed to. If you're using the [tru.ID's India Data Residency](https://tru.id/blog/india-data-residency), you may want to choose the `Chennai (Madras), India` for your deployment.
+
+At the end of this, you'll also be asked if you wish to deploy this application remotely. Choose yes.
+
+```bash
+flyctl launch
+```
+
+Your backend server is now ready to be used on the URL: `https://<fly.io project name>.fly.dev`.
+
+#### Deploy Locally
 
 ```
 npm start
