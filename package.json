@@ -6,7 +6,7 @@
     "type": "git",
     "url": "https://github.com/tru-ID/server-example-node.git"
   },
-  "main": "index.js",
+  "main": "src/server.js",
   "author": {
     "name": "tru.ID",
     "email": "community@tru.id",
