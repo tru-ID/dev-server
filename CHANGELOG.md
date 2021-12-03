@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.4](https://github.com/tru-ID/server-example-node/compare/v0.2.3...v0.2.4) (2021-12-03)
+
+- Added deploying `dev-server` to cloud to improve getting started options.
+
 ### [0.2.2](https://github.com/tru-ID/server-example-node/compare/v0.2.1...v0.2.2) (2021-06-01)
 
 - Updated packages, added linting and formatting
