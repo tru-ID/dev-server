@@ -61,7 +61,15 @@ $ tru projects:update --phonecheck-callback {local_tunnel_url}/phone-check/callb
 
 ### Run the server
 
-There are two ways you can run this `dev-server` for testing with, the first one is to deploy it to a sevice such as [Fly.io](https://www.fly.io). Or the `dev-server` could be run locally, needing a service such as [Ngrok](https://ngrok.com/) or [LocalTunnel](https://github.com/localtunnel/localtunnel) to expose the server to the Internet.
+There are two ways you can run this `dev-server` for testing with, the first one is to be run locally, needing a service such as [Ngrok](https://ngrok.com/) or [LocalTunnel](https://github.com/localtunnel/localtunnel) to expose the server to the Internet. The second method is to deploy it to a sevice such as [Fly.io](https://www.fly.io).
+
+#### Run Locally
+
+```
+npm start
+# or
+yarn start
+```
 
 #### Remote via Fly.io
 
@@ -79,6 +87,8 @@ flyctl secrets set TRU_ID_CLIENT_ID=<YOUR_CLIENT_ID> TRU_ID_CLIENT_SECRET=<YOUR_
 
 ##### Deploy
 
+> **Note:** Please keep in mind that deploying this remotely could result in the API endpoints being publically accessible to anyone unless you secure these endpoints with authentication, the server will also be running until you close it down.
+
 Running `flyctl launch` will prompt you for some pieces of information about your application, including the region you wish this to be deployed to. If you're using the [tru.ID's India Data Residency](https://tru.id/blog/india-data-residency), you may want to choose the `Chennai (Madras), India` for your deployment.
 
 At the end of this, you'll also be asked if you wish to deploy this application remotely. Choose yes.
@@ -88,14 +98,6 @@ flyctl launch
 ```
 
 Your backend server is now ready to be used on the URL: `https://<fly.io project name>.fly.dev`.
-
-#### Deploy Locally
-
-```
-npm start
-# or
-yarn start
-```
 
 ### Explore
 
