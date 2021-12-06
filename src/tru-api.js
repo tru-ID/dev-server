@@ -36,7 +36,7 @@ function log(...args) {
 async function getAccessToken(scopes = DEFAULT_SCOPES) {
   log('getAccessToken')
 
-  if (TOKEN.accessToken && TOKEN.expiresAt) {
+  if (TOKEN.accessToken !== undefined && TOKEN.expiresAt !== undefined) {
     // we already have an access token let's check if it's not expired
     // I'm removing 1 minute just in case it's about to expire better refresh it anyway
     if (
