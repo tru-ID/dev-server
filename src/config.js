@@ -1,5 +1,6 @@
 const path = require('path')
 const { cwd } = require('process')
+const api = require('./tru-api')
 require('dotenv').config()
 
 console.log('Loading standard configuration')
@@ -15,7 +16,7 @@ const LOCALTUNNEL_ENABLED = process.env.LOCALTUNNEL_ENABLED
   : false
 const { LOCALTUNNEL_SUBDOMAIN, PROJECT_PATH } = process.env
 
-function configure(params) {
+async function configure(params) {
   const processConfig = {
     port: PORT,
     DEBUG,
@@ -56,6 +57,22 @@ function configure(params) {
       client_secret: projectConfig.credentials[0].client_secret,
     }
   }
+
+  // fetch initial access token
+  await api(config).getAccessToken()
+
+  // refresh access token every 55 minutes (we have 1 hour expiry)
+  setInterval(() => {
+    api(config)
+      .getAccessToken()
+      .then(() => {
+        console.log('token refreshed')
+      })
+      .catch((err) => {
+        console.log('error while refreshing token')
+        console.error(err)
+      })
+  }, 55 * 60 * 1000)
 
   return config
 }

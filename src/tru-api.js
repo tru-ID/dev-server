@@ -217,7 +217,7 @@ async function getCountryCoverage(countryCode) {
   log('getCountryCoverage')
 
   const url = `${config.apiBaseUrl}/coverage/v0.1/countries/${countryCode}`
-  const token = await getAccessToken(['coverage'])
+  const token = await getAccessToken()
   const requestHeaders = {
     Authorization: `Bearer ${token}`,
   }
@@ -245,7 +245,7 @@ async function getDeviceCoverage(ipAddress) {
   log('getIPCoverage')
 
   const url = `${config.apiBaseUrl}/coverage/v0.1/device_ips/${ipAddress}`
-  const token = await getAccessToken(['coverage'])
+  const token = await getAccessToken()
   const requestHeaders = {
     Authorization: `Bearer ${token}`,
   }

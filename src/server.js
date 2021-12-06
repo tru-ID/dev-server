@@ -2,9 +2,10 @@ const path = require('path')
 const express = require('express')
 const cors = require('cors')
 const createConfig = require('./config')
+const routes = require('./routes')
 
 async function serve(customConfig) {
-  const config = createConfig(customConfig)
+  const config = await createConfig(customConfig)
   config.log('configuration:\n', config)
   const app = express()
   app.use(cors())
@@ -30,7 +31,6 @@ async function serve(customConfig) {
   }
   app.use(express.static(path.join(__dirname, '..', 'public')))
 
-  const routes = require('./routes')
   app.use(routes(config))
 
   app.listen(config.port, () => {
