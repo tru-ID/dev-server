@@ -65,8 +65,8 @@ async function configure(params) {
   setInterval(() => {
     api(config)
       .getAccessToken()
-      .then(() => {
-        console.log('token refreshed')
+      .then((v) => {
+        console.log('token refreshed', v)
       })
       .catch((err) => {
         console.log('error while refreshing token')
