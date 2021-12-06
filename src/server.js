@@ -1,13 +1,16 @@
 const path = require('path')
 const express = require('express')
 const cors = require('cors')
+
 const createConfig = require('./config')
 const routes = require('./routes')
+const { expressPino } = require('./logger')
 
 async function serve(customConfig) {
   const config = await createConfig(customConfig)
   config.log('configuration:\n', config)
   const app = express()
+  app.use(expressPino)
   app.use(cors())
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
