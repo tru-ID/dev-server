@@ -39,7 +39,11 @@ async function getAccessToken(scopes = DEFAULT_SCOPES) {
   if (TOKEN.accessToken && TOKEN.expiresAt) {
     // we already have an access token let's check if it's not expired
     // I'm removing 1 minute just in case it's about to expire better refresh it anyway
-    if (moment(TOKEN.expiresAt).isBefore(moment().subtract(1, 'minute'))) {
+    if (
+      moment()
+        .add(1, 'minute')
+        .isBefore(moment(new Date(TOKEN.expiresAt)))
+    ) {
       // token not expired
       return TOKEN.accessToken
     }
