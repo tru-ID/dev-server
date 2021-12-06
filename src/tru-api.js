@@ -1,7 +1,14 @@
 const axios = require('axios')
+const moment = require('moment')
 const qs = require('querystring')
 
 const DEFAULT_SCOPES = ['phone_check sim_check subscriber_check coverage']
+
+// token cache in memory
+const TOKEN = {
+  accessToken: undefined,
+  expiresAt: undefined,
+}
 
 // Check
 const CHECK_TYPES = {
@@ -29,6 +36,17 @@ function log(...args) {
 async function getAccessToken(scopes = DEFAULT_SCOPES) {
   log('getAccessToken')
 
+  if (TOKEN.accessToken && TOKEN.expiresAt) {
+    // we already have an access token let's check if it's not expired
+    // I'm removing 1 minute just in case it's about to expire better refresh it anyway
+    if (moment(TOKEN.expiresAt).isBefore(moment().subtract(1, 'minute'))) {
+      // token not expired
+      return TOKEN.accessToken
+    }
+  }
+
+  // we don't have an access token or it's expired
+
   const url = `${config.apiBaseUrl}/oauth2/v1/token`
   const params = qs.stringify({
     grant_type: 'client_credentials',
@@ -54,7 +72,13 @@ async function getAccessToken(scopes = DEFAULT_SCOPES) {
 
   log('accessTokenResult.data', accessTokenResult.data)
 
-  return accessTokenResult.data
+  // update token cache in memory
+  TOKEN.accessToken = accessTokenResult.data.access_token
+  TOKEN.expiresAt = moment()
+    .add(accessTokenResult.data.expires_in, 'seconds')
+    .toString()
+
+  return accessTokenResult.data.access_token
 }
 
 /**
@@ -71,9 +95,9 @@ async function createCheck(type, phoneNumber) {
     phone_number: phoneNumber,
   }
 
-  const auth = (await getAccessToken()).access_token
+  const token = await getAccessToken()
   const requestHeaders = {
-    Authorization: `Bearer ${auth}`,
+    Authorization: `Bearer ${token}`,
     'Content-Type': 'application/json',
   }
 
@@ -102,9 +126,9 @@ async function getCheck(type, checkId) {
   const url = `${config.apiBaseUrl}/${type}_check/v0.1/checks/${checkId}`
   const params = {}
 
-  const auth = (await getAccessToken()).access_token
+  const token = await getAccessToken()
   const requestHeaders = {
-    Authorization: `Bearer ${auth}`,
+    Authorization: `Bearer ${token}`,
     'Content-Type': 'application/json',
   }
 
@@ -189,9 +213,9 @@ async function getCountryCoverage(countryCode) {
   log('getCountryCoverage')
 
   const url = `${config.apiBaseUrl}/coverage/v0.1/countries/${countryCode}`
-  const auth = (await getAccessToken(['coverage'])).access_token
+  const token = await getAccessToken(['coverage'])
   const requestHeaders = {
-    Authorization: `Bearer ${auth}`,
+    Authorization: `Bearer ${token}`,
   }
 
   log('url', url)
@@ -217,9 +241,9 @@ async function getDeviceCoverage(ipAddress) {
   log('getIPCoverage')
 
   const url = `${config.apiBaseUrl}/coverage/v0.1/device_ips/${ipAddress}`
-  const auth = (await getAccessToken(['coverage'])).access_token
+  const token = await getAccessToken(['coverage'])
   const requestHeaders = {
-    Authorization: `Bearer ${auth}`,
+    Authorization: `Bearer ${token}`,
   }
 
   log('url', url)
