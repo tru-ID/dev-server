@@ -1,3 +1,4 @@
+const axios = require('axios')
 const { Router } = require('express')
 const jwksClient = require('jwks-rsa')
 const httpSignature = require('http-signature')
@@ -30,10 +31,13 @@ async function createPhoneCheck(req, res) {
       check_url: phoneCheckRes._links.check_url.href,
     })
   } catch (error) {
-    config.log('error in /check')
-    config.log(error.toString(), error.data)
-
-    res.status(500).send('Whoops!')
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        res.status(error.response.status).send(error.response.data)
+        return
+      }
+    }
+    res.sendStatus(500)
   }
 }
 
@@ -53,10 +57,13 @@ async function getPhoneCheckStatus(req, res) {
       check_id: phoneCheckRes.check_id,
     })
   } catch (error) {
-    config.log('error in getting PhoneCheck status')
-    config.log(error.toString(), error.data)
-
-    res.status(500).send('Whoops!')
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        res.status(error.response.status).send(error.response.data)
+        return
+      }
+    }
+    res.sendStatus(500)
   }
 }
 
@@ -64,7 +71,8 @@ async function getPhoneCheckStatus(req, res) {
  * Handles a callback from the tru.ID platform indicating that a Phone Check has reached an end state.
  */
 async function phoneCheckCallback(req, res) {
-  config.log('PhoneCheck received callback', req.headers, req.body)
+  req.log.info('PhoneCheck received callback')
+  req.log.info({ headers: req.headers, body: req.body })
 
   const parsed = httpSignature.parseRequest(req)
   const { keyId } = parsed
@@ -108,10 +116,13 @@ async function createSubscriberCheck(req, res) {
       check_url: subscriberCheckRes._links.check_url.href,
     })
   } catch (error) {
-    config.log('error in /check')
-    config.log(error.toString(), error.data)
-
-    res.status(500).send('Whoops!')
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        res.status(error.response.status).send(error.response.data)
+        return
+      }
+    }
+    res.sendStatus(500)
   }
 }
 
@@ -134,10 +145,13 @@ async function getSubscriberCheckStatus(req, res) {
       last_sim_change_at: subscriberCheckRes.last_sim_change_at,
     })
   } catch (error) {
-    config.log('error in getting SubscriberCheck status')
-    config.log(error.toString(), error.data)
-
-    res.status(500).send('Whoops!')
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        res.status(error.response.status).send(error.response.data)
+        return
+      }
+    }
+    res.sendStatus(500)
   }
 }
 
@@ -156,7 +170,7 @@ async function createSimCheck(req, res) {
 
   try {
     const simCheck = await api.createSimCheck(phoneNumber)
-    config.log(simCheck)
+    req.log.info(simCheck)
 
     // Select data to send to client
     res.json({
@@ -164,10 +178,13 @@ async function createSimCheck(req, res) {
       last_sim_change_at: simCheck.last_sim_change_at,
     })
   } catch (error) {
-    config.log('error in creating SIMCheck')
-    config.log(error.toString(), error.data)
-
-    res.status(500).send('Whoops!')
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        res.status(error.response.status).send(error.response.data)
+        return
+      }
+    }
+    res.sendStatus(500)
   }
 }
 
@@ -185,15 +202,18 @@ async function getCountryCoverage(req, res) {
 
   try {
     const countryCoverage = await api.getCountryCoverage(countryCode)
-    config.log(countryCoverage)
+    req.log.info(countryCoverage)
 
     // Select data to send to client
     res.json(countryCoverage)
   } catch (error) {
-    config.log('error getting country coverage')
-    config.log(error.toString(), error.data)
-
-    res.status(500).send('Whoops!')
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        res.status(error.response.status).send(error.response.data)
+        return
+      }
+    }
+    res.sendStatus(500)
   }
 }
 
@@ -209,26 +229,29 @@ async function getDeviceCoverage(req, res) {
 
   try {
     const deviceCoverage = await api.getDeviceCoverage(ipAddress)
-    config.log(deviceCoverage)
+    req.log.info(deviceCoverage)
 
     res.status(deviceCoverage.status ?? 200).json(deviceCoverage)
   } catch (error) {
-    config.log('error getting device coverage')
-    config.log(error.toString(), error.data)
-
-    res.status(500).send('Whoops!')
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        res.status(error.response.status).send(error.response.data)
+        return
+      }
+    }
+    res.sendStatus(500)
   }
 }
 
 async function traces(req, res) {
-  console.log(JSON.stringify(req.body, null, 2))
+  req.log.info(req.body)
   res.sendStatus(200)
 }
 
 // Helpers
 async function getMyIp(req, res) {
   const ipResponse = { ip_address: req.ip }
-  config.log('MyIp', ipResponse)
+  req.log.info('MyIp', ipResponse)
   res.status(200).json(ipResponse)
 }
 
