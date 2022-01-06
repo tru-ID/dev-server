@@ -85,7 +85,7 @@ Two environment variables are required `TRU_ID_CLIENT_ID` and `TRU_ID_CLIENT_SEC
 flyctl secrets set TRU_ID_CLIENT_ID=<YOUR_CLIENT_ID> TRU_ID_CLIENT_SECRET=<YOUR_CLIENT_SECRET>
 ```
 
-##### Deploy
+#### Deploy
 
 > **Note:** Please keep in mind that deploying this remotely could result in the API endpoints being publically accessible to anyone unless you secure these endpoints with authentication, the server will also be running until you close it down.
 
@@ -98,6 +98,13 @@ flyctl launch
 ```
 
 Your backend server is now ready to be used on the URL: `https://<fly.io project name>.fly.dev`.
+
+#### Internal deploy with fly.io
+
+We keep a separate branch `deploy_fly_io` that contains the necessary changes for our internal deployment. Make sure to merge any changes from `main` to `deploy_fly_io` and then when you are ready to deploy run
+```bash
+flyctl deploy
+```
 
 ### Explore
 
