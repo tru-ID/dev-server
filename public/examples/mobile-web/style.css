@@ -77,6 +77,11 @@ label[for='phone_number'] {
   text-align: center;
 }
 
+#phone_number_note {
+  padding: 10px;
+  font-style: italic;
+}
+
 .has-coverage #phone_check {
   display: block;
 }
