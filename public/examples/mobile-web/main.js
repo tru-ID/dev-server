@@ -35,7 +35,7 @@ async function checkCoverage() {
     if (deviceCoverageResult.status === 200) {
       // tru.ID has coverage
       setStatus('has-coverage')
-    } else if (deviceCoverageResult.status === 404) {
+    } else if (deviceCoverageResult.status === 400) {
       // No coverage
       setStatus('no-coverage')
     } else if (deviceCoverageResult.status === 412) {
