@@ -59,7 +59,7 @@ async function getPhoneCheckResult(checkId) {
     console.log(phoneCheckResult)
 
     progressUpdate(
-      `${phoneCheckResult.data.match ? '✅' : '❌'} Phone Number Verified`,
+      `${phoneCheckResult.data.match ? '✅ Phone Number Verified' : '❌ Phone Number Not A Match'}`,
     )
 
     setStatus('has-coverage')
@@ -88,7 +88,9 @@ async function phoneCheckFormSubmit(ev) {
     const phoneCheckCreateResult = await axios.post('/phone-check', {
       phone_number: phoneNumberValue,
     })
+
     console.log(phoneCheckCreateResult)
+
     if (phoneCheckCreateResult.status === 200) {
       progressUpdate('✅ Creating Mobile Data Session')
 
@@ -96,6 +98,7 @@ async function phoneCheckFormSubmit(ev) {
       const checkMethod = document.getElementById('check_method_image').checked
         ? 'image'
         : 'window'
+
       await tru.ID.openCheckUrl(phoneCheckCreateResult.data.check_url, {
         checkMethod,
         debug: true,
@@ -109,11 +112,17 @@ async function phoneCheckFormSubmit(ev) {
       getPhoneCheckResult(phoneCheckCreateResult.data.check_id)
     } else {
       console.error(phoneCheckFormSubmit)
+
       handleError('An error occurred while creating a PhoneCheck.')
     }
   } catch (error) {
     console.error(error)
-    handleError('An error occurred while creating a PhoneCheck.')
+
+    if (error.response.status === 400) {
+      handleError('Your Mobile Network is not supported or you may be on WiFi, if so disconnect from WiFi.')
+    } else {
+      handleError('An error occurred while creating a PhoneCheck.')
+    }
   }
 }
 
