@@ -1,7 +1,15 @@
 const axios = require('axios')
+const moment = require('moment')
 const qs = require('querystring')
+const { logger } = require('./logger')
 
 const DEFAULT_SCOPES = ['phone_check sim_check subscriber_check coverage']
+
+// token cache in memory
+const TOKEN = {
+  accessToken: undefined,
+  expiresAt: undefined,
+}
 
 // Check
 const CHECK_TYPES = {
@@ -13,12 +21,6 @@ const CHECK_TYPES = {
 // TODO this smells, fix it later
 let config
 
-function log(...args) {
-  if (config.DEBUG) {
-    console.debug.call(...args)
-  }
-}
-
 // Tokens
 
 /**
@@ -27,7 +29,22 @@ function log(...args) {
  * @param scopes {Object} Optional. Array of scopes for the created access token. Defaults to `['phone_check sim_check coverage']`.
  */
 async function getAccessToken(scopes = DEFAULT_SCOPES) {
-  log('getAccessToken')
+  logger.info('getAccessToken')
+
+  if (TOKEN.accessToken !== undefined && TOKEN.expiresAt !== undefined) {
+    // we already have an access token let's check if it's not expired
+    // I'm removing 1 minute just in case it's about to expire better refresh it anyway
+    if (
+      moment()
+        .add(1, 'minute')
+        .isBefore(moment(new Date(TOKEN.expiresAt)))
+    ) {
+      // token not expired
+      return TOKEN.accessToken
+    }
+  }
+
+  // we don't have an access token or it's expired
 
   const url = `${config.apiBaseUrl}/oauth2/v1/token`
   const params = qs.stringify({
@@ -44,17 +61,21 @@ async function getAccessToken(scopes = DEFAULT_SCOPES) {
     'Content-Type': 'application/x-www-form-urlencoded',
   }
 
-  log('url', url)
-  log('params', params)
-  log('requestHeaders', requestHeaders)
+  logger.info({ url, params, requestHeaders })
 
   const accessTokenResult = await axios.post(url, params, {
     headers: requestHeaders,
   })
 
-  log('accessTokenResult.data', accessTokenResult.data)
+  logger.info(accessTokenResult.data)
 
-  return accessTokenResult.data
+  // update token cache in memory
+  TOKEN.accessToken = accessTokenResult.data.access_token
+  TOKEN.expiresAt = moment()
+    .add(accessTokenResult.data.expires_in, 'seconds')
+    .toString()
+
+  return accessTokenResult.data.access_token
 }
 
 /**
@@ -64,28 +85,26 @@ async function getAccessToken(scopes = DEFAULT_SCOPES) {
  * @param {String} phoneNumber - The phone number to create a Phone Check for.
  */
 async function createCheck(type, phoneNumber) {
-  log('createCheck')
+  logger.info('createCheck')
 
   const url = `${config.apiBaseUrl}/${type}_check/v0.1/checks`
   const params = {
     phone_number: phoneNumber,
   }
 
-  const auth = (await getAccessToken()).access_token
+  const token = await getAccessToken()
   const requestHeaders = {
-    Authorization: `Bearer ${auth}`,
+    Authorization: `Bearer ${token}`,
     'Content-Type': 'application/json',
   }
 
-  log('url', url)
-  log('params', params)
-  log('requestHeaders', requestHeaders)
+  logger.info({ url, params, requestHeaders })
 
   const checkCreationResult = await axios.post(url, params, {
     headers: requestHeaders,
   })
 
-  log('checkCreationResult.data', checkCreationResult.data)
+  logger.info('checkCreationResult.data', checkCreationResult.data)
 
   return checkCreationResult.data
 }
@@ -97,27 +116,23 @@ async function createCheck(type, phoneNumber) {
  * @param {String} checkId The ID of the PhoneCheck to retrieve.
  */
 async function getCheck(type, checkId) {
-  log('getCheck')
-
   const url = `${config.apiBaseUrl}/${type}_check/v0.1/checks/${checkId}`
   const params = {}
 
-  const auth = (await getAccessToken()).access_token
+  const token = await getAccessToken()
   const requestHeaders = {
-    Authorization: `Bearer ${auth}`,
+    Authorization: `Bearer ${token}`,
     'Content-Type': 'application/json',
   }
 
-  log('url', url)
-  log('params', params)
-  log('requestHeaders', requestHeaders)
+  logger.info({ url, params, requestHeaders })
 
   const getCheckResult = await axios.get(url, {
     params,
     headers: requestHeaders,
   })
 
-  log('getCheckResult.data', getCheckResult.data)
+  logger.info(getCheckResult.data)
 
   return getCheckResult.data
 }
@@ -130,8 +145,6 @@ async function getCheck(type, checkId) {
  * @param {String} phoneNumber - The phone number to create a Phone Check for.
  */
 async function createPhoneCheck(phoneNumber) {
-  log('createPhoneCheck')
-
   return createCheck(CHECK_TYPES.PHONE, phoneNumber)
 }
 
@@ -141,8 +154,6 @@ async function createPhoneCheck(phoneNumber) {
  * @param {String} checkId The ID of the PhoneCheck to retrieve.
  */
 async function getPhoneCheck(checkId) {
-  log('getPhoneCheck')
-
   return getCheck(CHECK_TYPES.PHONE, checkId)
 }
 
@@ -154,8 +165,6 @@ async function getPhoneCheck(checkId) {
  * @param {String} phoneNumber - The phone number to create a SubscriberCheck for.
  */
 async function createSubscriberCheck(phoneNumber) {
-  log('createSubscriberCheck')
-
   return createCheck(CHECK_TYPES.SUBSCRIBER, phoneNumber)
 }
 
@@ -165,16 +174,12 @@ async function createSubscriberCheck(phoneNumber) {
  * @param {String} checkId The ID of the SubscriberCheck to retrieve.
  */
 async function getSubscriberCheck(checkId) {
-  log('getSubscriberCheck')
-
   return getCheck(CHECK_TYPES.SUBSCRIBER, checkId)
 }
 
 // SIMCheck
 
 async function createSimCheck(phoneNumber) {
-  log('createSimCheck')
-
   return createCheck(CHECK_TYPES.SIM, phoneNumber)
 }
 
@@ -186,22 +191,19 @@ async function createSimCheck(phoneNumber) {
  * @param {string} countryCode
  */
 async function getCountryCoverage(countryCode) {
-  log('getCountryCoverage')
-
   const url = `${config.apiBaseUrl}/coverage/v0.1/countries/${countryCode}`
-  const auth = (await getAccessToken(['coverage'])).access_token
+  const token = await getAccessToken()
   const requestHeaders = {
-    Authorization: `Bearer ${auth}`,
+    Authorization: `Bearer ${token}`,
   }
 
-  log('url', url)
-  log('requestHeaders', requestHeaders)
+  logger.info({ url, requestHeaders })
 
   const countryCoverageResult = await axios.get(url, {
     headers: requestHeaders,
   })
 
-  log('countryCoverageResult.data', countryCoverageResult.data)
+  logger.info(countryCoverageResult.data)
 
   return countryCoverageResult.data
 }
@@ -214,23 +216,20 @@ async function getCountryCoverage(countryCode) {
  * @param {string} ipAddress the IP address of the device for which coverage is being queried
  */
 async function getDeviceCoverage(ipAddress) {
-  log('getIPCoverage')
-
   const url = `${config.apiBaseUrl}/coverage/v0.1/device_ips/${ipAddress}`
-  const auth = (await getAccessToken(['coverage'])).access_token
+  const token = await getAccessToken()
   const requestHeaders = {
-    Authorization: `Bearer ${auth}`,
+    Authorization: `Bearer ${token}`,
   }
 
-  log('url', url)
-  log('requestHeaders', requestHeaders)
+  logger.info({ url, requestHeaders })
 
   const deviceCoverageResult = await axios.get(url, {
     headers: requestHeaders,
     validateStatus: (status) => status >= 200 && status <= 412,
   })
 
-  log('deviceCoverageResult.data', deviceCoverageResult.data)
+  logger.info(deviceCoverageResult.data)
 
   return deviceCoverageResult.data
 }
