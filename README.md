@@ -60,10 +60,10 @@ If you wish to receive Phone Check HTTP callbacks when the Phone Check enters an
 1. Run a local tunnel solution to expose your local running server to the Internet
 2. Configure your Project to have a `phonecheck_callback_url
 
-From the project directory run the following command replacing `{ngrok_url}` with the URL exposing your localhost server to the Internet:
+From the project directory run the following command replacing `{local_tunnel_url}` with the URL exposing your localhost server to the Internet:
 
 ```
-$ tru projects:update --phonecheck-callback {ngrok_url}/phone-check/callback
+$ tru projects:update --phonecheck-callback {local_tunnel_url}/phone-check/callback
 ```
 
 ### Run the server
