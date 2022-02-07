@@ -102,7 +102,29 @@ async function getPhoneCheckStatus(req, res) {
 }
 
 async function phoneCheckCodeExchangeV2(req, res) {
-  const { code, check_id, reference_id } = req.body
+  if (req.method !== 'GET' && req.query !== 'POST') {
+    res.status(405).end()
+    return
+  }
+
+  let code
+  let check_id
+  let reference_id
+
+  if (req.method === 'GET') {
+    // GET is used when the phone check is created with a redirect back to the server
+    // so device browser/sdk will follow the url that contains the params in the query
+    code = req.query.code
+    check_id = req.query.check_id
+    reference_id = req.query.reference_id
+  } else if (req.method === 'POST') {
+    // POST is used when the phone check is created with a redirect back to the device
+    // so the device will have to make a POST with body that contains the params
+    code = req.body.code
+    check_id = req.body.check_id
+    reference_id = req.body.reference_id
+  }
+
   if (!code) {
     res.status(400).json({ error_message: 'code parameter is required' })
     return
@@ -361,7 +383,7 @@ function routes(_config) {
   // new prefixed routes
   router.post('/v0.2/phone-check', createPhoneCheckV2)
   router.get('/v0.2/phone-check', getPhoneCheckStatus) // same logic as V1
-  router.post('/v0.2/phone-check/exchange-code', phoneCheckCodeExchangeV2)
+  router.use('/v0.2/phone-check/exchange-code', phoneCheckCodeExchangeV2)
 
   return router
 }
