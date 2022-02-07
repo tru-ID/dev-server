@@ -108,6 +108,61 @@ async function createCheck(type, phoneNumber) {
 
   return checkCreationResult.data
 }
+async function createCheckV2(type, phoneNumber, redirectUrl) {
+  logger.info('createCheck')
+
+  const url = `${config.apiBaseUrl}/${type}_check/v0.2/checks`
+  const params = {
+    phone_number: phoneNumber,
+    redirect_url: redirectUrl,
+  }
+
+  const token = await getAccessToken()
+  const requestHeaders = {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
+  }
+
+  logger.info({ url, params, requestHeaders })
+
+  const checkCreationResult = await axios.post(url, params, {
+    headers: requestHeaders,
+  })
+
+  logger.info('checkCreationResult.data', checkCreationResult.data)
+
+  return checkCreationResult.data
+}
+
+/**
+ * Creates a Check of a type for the given `phoneNumber`.
+ *
+ * @param {String} type - `phone`, `sim` or `subscriber` via `CHECK_TYPES`
+ * @param {String} id - The check ID.
+ * @param {String} code - The code to be exchanged in order to complete the check.
+ */
+async function patchCheckV2(type, check_id, code, reference_id) {
+  logger.info('patchCheck', type, check_id, code, reference_id)
+
+  const url = `${config.apiBaseUrl}/${type}_check/v0.2/checks/${check_id}`
+  const body = [{ op: 'add', path: '/code', value: code }]
+
+  const token = await getAccessToken()
+  const requestHeaders = {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json-patch+json',
+  }
+
+  logger.info({ url, body, requestHeaders })
+
+  const checkPatchResult = await axios.patch(url, body, {
+    headers: requestHeaders,
+  })
+
+  logger.info('checkPatchResult.data', checkPatchResult.data)
+
+  return checkPatchResult.data
+}
 
 /**
  * Retrieves a Check of a provided `type` with the given `check_id`
@@ -147,6 +202,9 @@ async function getCheck(type, checkId) {
 async function createPhoneCheck(phoneNumber) {
   return createCheck(CHECK_TYPES.PHONE, phoneNumber)
 }
+async function createPhoneCheckV2(phoneNumber, redirectUrl) {
+  return createCheckV2(CHECK_TYPES.PHONE, phoneNumber, redirectUrl)
+}
 
 /**
  * Retrieves a PhoneCheck with the given `check_id`
@@ -155,6 +213,17 @@ async function createPhoneCheck(phoneNumber) {
  */
 async function getPhoneCheck(checkId) {
   return getCheck(CHECK_TYPES.PHONE, checkId)
+}
+
+/**
+ * Patches a PhoneCheck with a code.
+ *
+ * @param {String} check_id - The check ID.
+ * @param {String} code - The code used to complete the Phone Check flow.
+ * @param {String} reference_id - Optional.
+ */
+async function patchPhoneCheckV2(check_id, code, reference_id) {
+  return patchCheckV2(CHECK_TYPES.PHONE, check_id, code, reference_id)
 }
 
 // SubscriberCheck
@@ -236,7 +305,9 @@ async function getDeviceCoverage(ipAddress) {
 
 const api = {
   createPhoneCheck,
+  createPhoneCheckV2,
   getPhoneCheck,
+  patchPhoneCheckV2,
   createSubscriberCheck,
   getSubscriberCheck,
   createSimCheck,

@@ -41,6 +41,40 @@ async function createPhoneCheck(req, res) {
   }
 }
 
+async function createPhoneCheckV2(req, res) {
+  const { phone_number, redirect_url } = req.body
+  if (!phone_number) {
+    res
+      .status(400)
+      .json({ error_message: 'phone_number parameter is required' })
+    return
+  }
+  if (!redirect_url) {
+    res
+      .status(400)
+      .json({ error_message: 'redirect_url parameter is required' })
+    return
+  }
+
+  try {
+    const phoneCheckRes = await api.createPhoneCheck(phone_number)
+
+    // Select data to send to client
+    res.json({
+      check_id: phoneCheckRes.check_id,
+      check_url: phoneCheckRes._links.check_url.href,
+    })
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        res.status(error.response.status).send(error.response.data)
+        return
+      }
+    }
+    res.sendStatus(500)
+  }
+}
+
 /**
  * Handle the request to check the state of a Phone Check. `req.query.check_id` must contain a valid Phone Check ID.
  */
@@ -55,6 +89,40 @@ async function getPhoneCheckStatus(req, res) {
     res.json({
       match: phoneCheckRes.match,
       check_id: phoneCheckRes.check_id,
+    })
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        res.status(error.response.status).send(error.response.data)
+        return
+      }
+    }
+    res.sendStatus(500)
+  }
+}
+
+async function phoneCheckCodeExchangeV2(req, res) {
+  const { code, check_id, reference_id } = req.body
+  if (!code) {
+    res.status(400).json({ error_message: 'code parameter is required' })
+    return
+  }
+  if (!check_id) {
+    res.status(400).json({ error_message: 'check_id parameter is required' })
+    return
+  }
+
+  try {
+    const phoneCheckRes = await api.patchPhoneCheck(
+      check_id,
+      code,
+      reference_id,
+    )
+
+    // Select data to send to client
+    res.json({
+      check_id: phoneCheckRes.check_id,
+      match: phoneCheckRes.match,
     })
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -260,6 +328,7 @@ function routes(_config) {
 
   api = createApi(config)
 
+  // old routes (backwards compatibility)
   router.post('/check', createPhoneCheck)
   router.post('/phone-check', createPhoneCheck)
   router.get('/check_status', getPhoneCheckStatus)
@@ -278,6 +347,21 @@ function routes(_config) {
   router.get('/my-ip', getMyIp)
 
   router.post('/traces', traces)
+
+  // old routes prefixed
+  router.post('/v0.1/phone-check', createPhoneCheck)
+  router.get('/v0.1/phone-check', getPhoneCheckStatus)
+  router.post('/v0.1/phone-check/callback', phoneCheckCallback)
+
+  router.post('/v0.1/subscriber-check', createSubscriberCheck)
+  router.get('/v0.1/subscriber-check/:check_id', getSubscriberCheckStatus)
+
+  router.post('/v0.1/sim-check', createSimCheck)
+
+  // new prefixed routes
+  router.post('/v0.2/phone-check', createPhoneCheckV2)
+  router.get('/v0.2/phone-check', getPhoneCheckStatus) // same logic as V1
+  router.post('/v0.2/phone-check/exchange-code', phoneCheckCodeExchangeV2)
 
   return router
 }
