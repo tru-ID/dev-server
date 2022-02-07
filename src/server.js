@@ -41,17 +41,14 @@ async function serve(customConfig) {
   })
 
   if (config.ngrok.enabled) {
-    // https://github.com/bubenshchykov/ngrok
-    console.log('Starting Ngrok')
-
     const ngrok = require('ngrok')
 
     const url = await ngrok.connect({
       proto: 'http', // http|tcp|tls, defaults to http
       addr: config.port, // port or network address, defaults to 80
-      subdomain: config.ngrok.subdomain, // reserved tunnel name https://alex.ngrok.io
-      authtoken: config.ngrok.authtoken, // your authtoken from ngrok.com
-      region: config.ngrok.region, // ngrok region for your tunnel
+      subdomain: process.env.NGROK_SUBDOMAIN, // reserved tunnel name https://alex.ngrok.io
+      authtoken: process.env.NGROK_AUTHTOKEN, // your authtoken from ngrok.com
+      region: process.env.NGROK_REGION, // ngrok region for your tunnel
       onStatusChange: status => {
         console.log(`ngrok status change: ${status}`)
       },
