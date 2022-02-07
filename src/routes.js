@@ -57,7 +57,7 @@ async function createPhoneCheckV2(req, res) {
   }
 
   try {
-    const phoneCheckRes = await api.createPhoneCheck(phone_number)
+    const phoneCheckRes = await api.createPhoneCheckV2(phone_number)
 
     // Select data to send to client
     res.json({
