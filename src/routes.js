@@ -135,7 +135,7 @@ async function phoneCheckCodeExchangeV2(req, res) {
   }
 
   try {
-    const phoneCheckRes = await api.patchPhoneCheck(
+    const phoneCheckRes = await api.patchPhoneCheckV2(
       check_id,
       code,
       reference_id,
