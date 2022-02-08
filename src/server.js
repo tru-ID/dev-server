@@ -54,7 +54,7 @@ async function serve(customConfig) {
       },
     });
 
-    console.log(`ngrok: ${url}`)
+    console.log(`Your ngrok tunnel URL is: ${url}`)
   }
 }
 
