@@ -105,7 +105,7 @@ async function getPhoneCheckStatus(req, res) {
 }
 
 async function phoneCheckCodeExchangeV2(req, res) {
-  if (req.method !== 'GET' && req.query !== 'POST') {
+  if (req.method !== 'GET' && req.method !== 'POST') {
     res.status(405).end()
     return
   }
@@ -313,6 +313,9 @@ async function getCountryCoverage(req, res) {
 // Device
 
 async function getDeviceCoverage(req, res) {
+  // TODO REMOVE
+  res.status(200).end()
+  return
   const ipAddress = req.query.id_address || req.ip
 
   if (!ipAddress) {
