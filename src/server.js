@@ -56,26 +56,6 @@ async function serve(customConfig) {
 
     console.log(`ngrok: ${url}`)
   }
-
-  if (config.localtunnel.enabled) {
-    // https://github.com/localtunnel/localtunnel
-    config.log('Starting localtunnel')
-    const localtunnel = require('localtunnel')
-    const tunnel = await localtunnel({
-      port: config.port,
-      subdomain: config.localtunnel.subdomain,
-    })
-    tunnel.on('request', (info) => {
-      console.log(info)
-    })
-    tunnel.on('error', (error) => {
-      console.error(error)
-    })
-    tunnel.on('close', () => {
-      console.log('localtunnel closing')
-    })
-    console.log(`localtunnel: ${tunnel.url}`)
-  }
 }
 
 module.exports = {

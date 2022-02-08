@@ -12,10 +12,6 @@ const API_BASE_URL = process.env.API_BASE_URL ?? 'https://eu.api.tru.id'
 const CLIENT_ID = process.env.TRU_ID_CLIENT_ID
 const CLIENT_SECRET = process.env.TRU_ID_CLIENT_SECRET
 const { PROJECT_PATH } = process.env
-const LOCALTUNNEL_ENABLED = process.env.LOCALTUNNEL_ENABLED
-  ? process.env.LOCALTUNNEL_ENABLED === 'true'
-  : false
-const LOCALTUNNEL_SUBDOMAIN = process.env
 
 const NGROK_ENABLED = process.env.NGROK_ENABLED
   ? process.env.NGROK_ENABLED === 'true'
@@ -29,10 +25,6 @@ async function configure(params) {
     basicAuth: {
       username: process.env.USERNAME,
       password: process.env.PASSWORD,
-    },
-    localtunnel: {
-      enabled: LOCALTUNNEL_ENABLED,
-      subdomain: LOCALTUNNEL_SUBDOMAIN,
     },
     ngrok: {
       enabled: NGROK_ENABLED,
