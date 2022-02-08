@@ -64,7 +64,7 @@ $ tru projects:update --phonecheck-callback {local_tunnel_url}/phone-check/callb
 
 ### Run the server
 
-There are two ways you can run this `dev-server` for testing with, the first one is to be run locally, needing a service such as [Ngrok](https://ngrok.com/) or [LocalTunnel](https://github.com/localtunnel/localtunnel) to expose the server to the Internet. The second method is to deploy it to a sevice such as [Fly.io](https://www.fly.io).
+There are two ways you can run this `dev-server` for testing with, the first one is to be run locally, needing a service such as [Ngrok](https://ngrok.com/) to expose the server to the Internet. The second method is to deploy it to a sevice such as [Fly.io](https://www.fly.io).
 
 #### Run Locally
 
@@ -171,14 +171,6 @@ truDevServer.serve(config)
 
         // String. Choice of location where the ngrok client will connect to host its tunnels.
         region: NGROK_REGION
-    },
-    // Object. Configuration for [localtunnel.me](https://github.com/localtunnel/localtunnel)
-    localtunnel: {
-        // Boolean. Whether localtunnel should be run to expose the running server to the public Internet. Defaults to false.
-        enabled: LOCALTUNNEL_ENABLED,
-
-        // String. A subdomain to use with localtunnel. No default. Note: you are not guaranteed to get the subdomain.
-        subdomain: LOCALTUNNEL_SUBDOMAIN
     },
     // Function. A function called with debug information when `DEBUG` is set to `true`. See below for default.
     log: (...args) => {
