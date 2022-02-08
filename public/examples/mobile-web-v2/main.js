@@ -93,7 +93,7 @@ async function phoneCheckFormSubmit(ev) {
     // Create PhoneCheck resource
     const phoneCheckCreateResult = await axios.post('/v0.2/phone-check', {
       phone_number: phoneNumberValue,
-      redirect_url: 'http://localhost:3000/examples/mobile-web-v2/callback',
+      redirect_url: `${window.location.origin}/examples/mobile-web-v2/callback`,
     })
 
     console.log(phoneCheckCreateResult)
