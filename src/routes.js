@@ -369,6 +369,8 @@ function routes(_config) {
   router.get('/my-ip', getMyIp)
 
   router.post('/traces', traces)
+  router.post('/v0.1/traces', traces)
+  router.post('/v0.2/traces', traces)
 
   // old routes prefixed
   router.post('/v0.1/phone-check', createPhoneCheck)
