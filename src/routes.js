@@ -49,12 +49,6 @@ async function createPhoneCheckV2(req, res) {
       .json({ error_message: 'phone_number parameter is required' })
     return
   }
-  if (!redirect_url) {
-    res
-      .status(400)
-      .json({ error_message: 'redirect_url parameter is required' })
-    return
-  }
 
   try {
     const phoneCheckRes = await api.createPhoneCheckV2(
