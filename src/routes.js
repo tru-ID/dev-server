@@ -49,12 +49,6 @@ async function createPhoneCheckV2(req, res) {
       .json({ error_message: 'phone_number parameter is required' })
     return
   }
-  if (!redirect_url) {
-    res
-      .status(400)
-      .json({ error_message: 'redirect_url parameter is required' })
-    return
-  }
 
   try {
     const phoneCheckRes = await api.createPhoneCheckV2(
@@ -375,6 +369,8 @@ function routes(_config) {
   router.get('/my-ip', getMyIp)
 
   router.post('/traces', traces)
+  router.post('/v0.1/traces', traces)
+  router.post('/v0.2/traces', traces)
 
   // old routes prefixed
   router.post('/v0.1/phone-check', createPhoneCheck)
