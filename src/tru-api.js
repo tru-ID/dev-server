@@ -191,6 +191,27 @@ async function getCheck(type, checkId) {
 
   return getCheckResult.data
 }
+async function getCheckV2(type, checkId) {
+  const url = `${config.apiBaseUrl}/${type}_check/v0.2/checks/${checkId}`
+  const params = {}
+
+  const token = await getAccessToken()
+  const requestHeaders = {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
+  }
+
+  logger.info({ url, params, requestHeaders })
+
+  const getCheckResult = await axios.get(url, {
+    params,
+    headers: requestHeaders,
+  })
+
+  logger.info(getCheckResult.data)
+
+  return getCheckResult.data
+}
 
 // PhoneCheck
 
@@ -213,6 +234,9 @@ async function createPhoneCheckV2(phoneNumber, redirectUrl) {
  */
 async function getPhoneCheck(checkId) {
   return getCheck(CHECK_TYPES.PHONE, checkId)
+}
+async function getPhoneCheckV2(checkId) {
+  return getCheckV2(CHECK_TYPES.PHONE, checkId)
 }
 
 /**
@@ -307,6 +331,7 @@ const api = {
   createPhoneCheck,
   createPhoneCheckV2,
   getPhoneCheck,
+  getPhoneCheckV2,
   patchPhoneCheckV2,
   createSubscriberCheck,
   getSubscriberCheck,

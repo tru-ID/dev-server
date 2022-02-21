@@ -98,6 +98,29 @@ async function getPhoneCheckStatus(req, res) {
   }
 }
 
+async function getPhoneCheckStatusV2(req, res) {
+  if (!req.query.check_id) {
+    res.status(400).json({ error_message: 'check_id parameter is required' })
+    return
+  }
+
+  try {
+    const phoneCheckRes = await api.getPhoneCheckV2(req.query.check_id)
+    res.json({
+      match: phoneCheckRes.match,
+      check_id: phoneCheckRes.check_id,
+    })
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        res.status(error.response.status).send(error.response.data)
+        return
+      }
+    }
+    res.sendStatus(500)
+  }
+}
+
 async function phoneCheckCodeExchangeV2(req, res) {
   if (req.method !== 'GET' && req.method !== 'POST') {
     res.status(405).end()
@@ -307,9 +330,6 @@ async function getCountryCoverage(req, res) {
 // Device
 
 async function getDeviceCoverage(req, res) {
-  // TODO REMOVE
-  res.status(200).end()
-  return
   const ipAddress = req.query.id_address || req.ip
 
   if (!ipAddress) {
@@ -384,7 +404,7 @@ function routes(_config) {
 
   // new prefixed routes
   router.post('/v0.2/phone-check', createPhoneCheckV2)
-  router.get('/v0.2/phone-check', getPhoneCheckStatus) // same logic as V1
+  router.get('/v0.2/phone-check', getPhoneCheckStatusV2)
   router.use('/v0.2/phone-check/exchange-code', phoneCheckCodeExchangeV2)
 
   return router
