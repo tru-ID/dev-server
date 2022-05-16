@@ -23,24 +23,38 @@
     <h2>Routes</h2>
     <p>It exposes the following routes as examples:</p>
 
-    <h3>PhoneCheck</h3>
+    <h3>PhoneCheck v0.2</h3>
     <dl>
-      <dt><code>POST /phone-check</code></dt>
+      <dt><code>POST /v0.2/phone-check</code></dt>
       <dd>to create a PhoneCheck resource</dd>
 
-      <dt><code>GET /phone-check</code></dt>
+      <dt><code>GET /v0.2/phone-check</code></dt>
       <dd>to get a PhoneCheck resource</dd>
 
-      <dt><code>POST /phone-check/callback</code></dt>
+      <dt><code>POST or GET /v0.2/phone-check/exchange-code</code></dt>
+      <dd>
+        to complete a PhoneCheck by passing the <b>code</b> provided in the final redirect back to the <b>tru.ID</b> platform
+      </dd>
+    </dl>
+
+    <h3>PhoneCheck v0.1</h3>
+    <dl>
+      <dt><code>POST /v0.1/phone-check</code></dt>
+      <dd>to create a PhoneCheck resource</dd>
+
+      <dt><code>GET /v0.1/phone-check</code></dt>
+      <dd>to get a PhoneCheck resource</dd>
+
+      <dt><code>POST /v0.1/phone-check/callback</code></dt>
       <dd>to handle a PhoneCheck callback from the <b>tru.ID</b> platform</dd>
     </dl>
 
     <h3>SubscriberCheck</h3>
     <dl>
-      <dt><code>POST /subscriber-check</code></dt>
+      <dt><code>POST /v0.1/subscriber-check</code></dt>
       <dd>to create a SubscriberCheck resource</dd>
 
-      <dt><code>GET /subscriber-check</code></dt>
+      <dt><code>GET /v0.1/subscriber-check/:check_id</code></dt>
       <dd>to get a SubscriberCheck resource</dd>
     </dl>
 
@@ -93,9 +107,13 @@
     <h3>PhoneCheck</h3>
     <ul>
       <li>
+        <a href="https://developer.tru.id/docs/reference/products#tag/phone_check_v0.2">v0.2</a><br/>
+        <a href="/examples/mobile-web-v2/">Mobile Web PhoneCheck</a>
+      </li>
+      <li>
+        <a href="https://developer.tru.id/docs/reference/products#tag/phone_check_v0.1">v0.1</a><br/>
         <a href="/examples/mobile-web/">Mobile Web PhoneCheck</a>
       </li>
-      <li>QR Code (coming soon)</li>
     </ul>
 
     <h3>SIMCheck</h3>

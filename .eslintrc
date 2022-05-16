@@ -6,6 +6,7 @@
   "rules": {
     "import/no-dynamic-require": "warn",
     "no-underscore-dangle": "warn",
-    "global-require": "warn"
+    "global-require": "warn",
+    "camelcase": "warn"
   }
 }

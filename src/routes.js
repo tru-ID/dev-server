@@ -41,6 +41,37 @@ async function createPhoneCheck(req, res) {
   }
 }
 
+async function createPhoneCheckV2(req, res) {
+  const { phone_number, redirect_url } = req.body
+  if (!phone_number) {
+    res
+      .status(400)
+      .json({ error_message: 'phone_number parameter is required' })
+    return
+  }
+
+  try {
+    const phoneCheckRes = await api.createPhoneCheckV2(
+      phone_number,
+      redirect_url,
+    )
+
+    // Select data to send to client
+    res.json({
+      check_id: phoneCheckRes.check_id,
+      check_url: phoneCheckRes._links.check_url.href,
+    })
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        res.status(error.response.status).send(error.response.data)
+        return
+      }
+    }
+    res.sendStatus(500)
+  }
+}
+
 /**
  * Handle the request to check the state of a Phone Check. `req.query.check_id` must contain a valid Phone Check ID.
  */
@@ -55,6 +86,85 @@ async function getPhoneCheckStatus(req, res) {
     res.json({
       match: phoneCheckRes.match,
       check_id: phoneCheckRes.check_id,
+    })
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        res.status(error.response.status).send(error.response.data)
+        return
+      }
+    }
+    res.sendStatus(500)
+  }
+}
+
+async function getPhoneCheckStatusV2(req, res) {
+  if (!req.query.check_id) {
+    res.status(400).json({ error_message: 'check_id parameter is required' })
+    return
+  }
+
+  try {
+    const phoneCheckRes = await api.getPhoneCheckV2(req.query.check_id)
+    res.json({
+      match: phoneCheckRes.match,
+      check_id: phoneCheckRes.check_id,
+    })
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        res.status(error.response.status).send(error.response.data)
+        return
+      }
+    }
+    res.sendStatus(500)
+  }
+}
+
+async function phoneCheckCodeExchangeV2(req, res) {
+  if (req.method !== 'GET' && req.method !== 'POST') {
+    res.status(405).end()
+    return
+  }
+
+  let code
+  let check_id
+  let reference_id
+
+  if (req.method === 'GET') {
+    // GET is used when the phone check is created with a redirect back to the server
+    // so device browser/sdk will follow the url that contains the params in the query
+    code = req.query.code
+    check_id = req.query.check_id
+    reference_id = req.query.reference_id
+  } else if (req.method === 'POST') {
+    // POST is used when the phone check is created with a redirect back to the device
+    // so the device will have to make a POST with body that contains the params
+    code = req.body.code
+    check_id = req.body.check_id
+    reference_id = req.body.reference_id
+  }
+
+  if (!code) {
+    res.status(400).json({ error_message: 'code parameter is required' })
+    return
+  }
+  if (!check_id) {
+    res.status(400).json({ error_message: 'check_id parameter is required' })
+    return
+  }
+
+  try {
+    const phoneCheckRes = await api.patchPhoneCheckV2(
+      check_id,
+      code,
+      reference_id,
+    )
+
+    // Select data to send to client
+    res.json({
+      check_id: phoneCheckRes.check_id,
+      match: phoneCheckRes.match,
     })
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -260,6 +370,7 @@ function routes(_config) {
 
   api = createApi(config)
 
+  // old routes (backwards compatibility)
   router.post('/check', createPhoneCheck)
   router.post('/phone-check', createPhoneCheck)
   router.get('/check_status', getPhoneCheckStatus)
@@ -278,6 +389,23 @@ function routes(_config) {
   router.get('/my-ip', getMyIp)
 
   router.post('/traces', traces)
+  router.post('/v0.1/traces', traces)
+  router.post('/v0.2/traces', traces)
+
+  // old routes prefixed
+  router.post('/v0.1/phone-check', createPhoneCheck)
+  router.get('/v0.1/phone-check', getPhoneCheckStatus)
+  router.post('/v0.1/phone-check/callback', phoneCheckCallback)
+
+  router.post('/v0.1/subscriber-check', createSubscriberCheck)
+  router.get('/v0.1/subscriber-check/:check_id', getSubscriberCheckStatus)
+
+  router.post('/v0.1/sim-check', createSimCheck)
+
+  // new prefixed routes
+  router.post('/v0.2/phone-check', createPhoneCheckV2)
+  router.get('/v0.2/phone-check', getPhoneCheckStatusV2)
+  router.use('/v0.2/phone-check/exchange-code', phoneCheckCodeExchangeV2)
 
   return router
 }
