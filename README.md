@@ -20,7 +20,7 @@ Clone or unzip the tru.ID Node Server into a directory.
 ### Create a tru.ID Project
 
 - Install the [tru.ID CLI](https://tru.id/docs/reference/cli)
-- Setup the CLI with the `client_id` and `client_secret` from the [tru.ID Console](https://tru.id/console)
+- Setup the CLI with the command: `$ tru login {IDP}`. Replacing `{IDP}` with your Identity Provider (google|github|microsoft).
 - Create a project with the CLI pointing to the tru.ID Node Server directory `$ tru projects:create --project-dir PATH_TO_SERVER_DIR`. This will create a `tru.json` file in the directory.
 
 ### Install dependencies:
