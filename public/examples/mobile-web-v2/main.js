@@ -52,29 +52,6 @@ async function checkCoverage() {
   }
 }
 
-async function getPhoneCheckResult(checkId) {
-  try {
-    // Retrieve the result and show the result
-    const phoneCheckResult = await axios.get(
-      `/v0.2/phone-check?check_id=${checkId}`,
-    )
-    console.log(phoneCheckResult)
-
-    progressUpdate(
-      `${
-        phoneCheckResult.data.match
-          ? '✅ Phone Number Verified'
-          : '❌ Phone Number Not A Match'
-      }`,
-    )
-
-    setStatus('has-coverage')
-  } catch (error) {
-    console.error(error)
-    handleError('An error occurred while retrieving the PhoneCheck result.')
-  }
-}
-
 async function phoneCheckFormSubmit(ev) {
   ev.preventDefault()
   setStatus('checking')
@@ -101,10 +78,6 @@ async function phoneCheckFormSubmit(ev) {
     if (phoneCheckCreateResult.status === 200) {
       progressUpdate('✅ Creating Mobile Data Session')
 
-      // V2
-      window.location = phoneCheckCreateResult.data.check_url
-      return
-
       // Execute the PhoneCheck
       const checkMethod = document.getElementById('check_method_image').checked
         ? 'image'
@@ -117,10 +90,8 @@ async function phoneCheckFormSubmit(ev) {
         // the device coverage check automatically on page load
         // through the node server
         checkDeviceCoverage: false,
+        version: 'v0.2',
       })
-
-      // check_url has been navigated to and check completed.
-      getPhoneCheckResult(phoneCheckCreateResult.data.check_id)
     } else {
       console.error(phoneCheckFormSubmit)
 
