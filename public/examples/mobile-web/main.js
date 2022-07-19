@@ -106,6 +106,7 @@ async function phoneCheckFormSubmit(ev) {
         // the device coverage check automatically on page load
         // through the node server
         checkDeviceCoverage: false,
+        version: 'v0.1',
       })
 
       // check_url has been navigated to and check completed.

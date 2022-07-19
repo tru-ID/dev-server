@@ -90,7 +90,6 @@ async function phoneCheckFormSubmit(ev) {
         // the device coverage check automatically on page load
         // through the node server
         checkDeviceCoverage: false,
-        version: 'v0.2',
       })
     } else {
       console.error(phoneCheckFormSubmit)
