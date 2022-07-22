@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.8](https://github.com/tru-ID/dev-server/compare/v0.2.1...v0.2.8) (2022-07-22)
+
+- Updated mobile-web-v2 example to use PhoneCheck v0.2 functionality within web-sdk.
+
 ### [0.2.7](https://github.com/tru-ID/dev-server/compare/v0.2.1...v0.2.7) (2022-06-07)
 
 - Updated README to contain instructions for PhoneCheck v0.2 functionality (redirect_url)
