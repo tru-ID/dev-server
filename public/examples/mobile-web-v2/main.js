@@ -52,23 +52,6 @@ async function checkCoverage() {
   }
 }
 
-async function getPhoneCheckResult(checkId) {
-  try {
-    // Retrieve the result and show the result
-    const phoneCheckResult = await axios.get(`/phone-check?check_id=${checkId}`)
-    console.log(phoneCheckResult)
-
-    progressUpdate(
-      `${phoneCheckResult.data.match ? '✅ Phone Number Verified' : '❌ Phone Number Not A Match'}`,
-    )
-
-    setStatus('has-coverage')
-  } catch (error) {
-    console.error(error)
-    handleError('An error occurred while retrieving the PhoneCheck result.')
-  }
-}
-
 async function phoneCheckFormSubmit(ev) {
   ev.preventDefault()
   setStatus('checking')
@@ -85,8 +68,9 @@ async function phoneCheckFormSubmit(ev) {
 
   try {
     // Create PhoneCheck resource
-    const phoneCheckCreateResult = await axios.post('/phone-check', {
+    const phoneCheckCreateResult = await axios.post('/v0.2/phone-check', {
       phone_number: phoneNumberValue,
+      redirect_url: `${window.location.origin}/examples/mobile-web-v2/callback`,
     })
 
     console.log(phoneCheckCreateResult)
@@ -106,11 +90,7 @@ async function phoneCheckFormSubmit(ev) {
         // the device coverage check automatically on page load
         // through the node server
         checkDeviceCoverage: false,
-        version: 'v0.1',
       })
-
-      // check_url has been navigated to and check completed.
-      getPhoneCheckResult(phoneCheckCreateResult.data.check_id)
     } else {
       console.error(phoneCheckFormSubmit)
 
@@ -120,7 +100,9 @@ async function phoneCheckFormSubmit(ev) {
     console.error(error)
 
     if (error.response.status === 400) {
-      handleError('Your Mobile Network is not supported or you may be on WiFi, if so disconnect from WiFi.')
+      handleError(
+        'Your Mobile Network is not supported or you may be on WiFi, if so disconnect from WiFi.',
+      )
     } else {
       handleError('An error occurred while creating a PhoneCheck.')
     }

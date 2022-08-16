@@ -3,3 +3,4 @@ tru.json
 .vscode/
 .env
 fly.toml
+.DS_Store

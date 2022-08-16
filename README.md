@@ -20,7 +20,7 @@ Clone or unzip the tru.ID Node Server into a directory.
 ### Create a tru.ID Project
 
 - Install the [tru.ID CLI](https://tru.id/docs/reference/cli)
-- Setup the CLI with the `client_id` and `client_secret` from the [tru.ID Console](https://tru.id/console)
+- Setup the CLI with the command: `$ tru login {IDP}`. Replacing `{IDP}` with your Identity Provider (google|github|microsoft).
 - Create a project with the CLI pointing to the tru.ID Node Server directory `$ tru projects:create --project-dir PATH_TO_SERVER_DIR`. This will create a `tru.json` file in the directory.
 
 ### Install dependencies:
@@ -49,12 +49,19 @@ If required, you can make configuration changes with the following environment v
 
 The server will attempt to load environment variables from a `.env` file in the root directory of the server.
 
+### Phone Check redirect
+
+The final step to a successful Phone Check for v0.2 is to provide a `redirect_url` back to your server. With this `dev-server`, you must:
+
+1. Run a local tunnel solution to expose your local running server to the Internet
+2. Configure your Project in the [Developer Console](https://developer.tru.id/console) to have a Redirect URL. This should be `{local_tunnel_url}/v0.2/phone-check/exchange-code` (replace `{local_tunnel_url}` with the URL exposing your localhost server to the Internet).
+
 ### Phone Check callbacks
 
 If you wish to receive Phone Check HTTP callbacks when the Phone Check enters and end state, you must:
 
 1. Run a local tunnel solution to expose your local running server to the Internet
-2. Configure your Project to have a `phonecheck_callback_url
+2. Configure your Project to have a `phonecheck_callback_url`
 
 From the project directory run the following command replacing `{local_tunnel_url}` with the URL exposing your localhost server to the Internet:
 

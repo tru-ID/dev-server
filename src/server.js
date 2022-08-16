@@ -36,7 +36,7 @@ async function serve(customConfig) {
 
   app.use(routes(config))
 
-  app.listen(config.port, () => {
+  const server = app.listen(config.port, () => {
     console.log(`Example app listening at http://localhost:${config.port}`)
   })
 
@@ -55,6 +55,10 @@ async function serve(customConfig) {
     });
 
     console.log(`Your ngrok tunnel URL is: ${url}`)
+  }
+  return {
+    app,
+    server,
   }
 }
 
