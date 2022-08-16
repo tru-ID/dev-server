@@ -171,7 +171,7 @@ truDevServer.serve(config)
         enabled: NGROK_ENABLED,
 
         // String. A subdomain to use with ngrok. No default. Note: unless you have a premium membership you cannot get a defined subdomain.
-        sundomain: NGROK_SUBDOMAIN,
+        subdomain: NGROK_SUBDOMAIN,
 
         // String. Your ngrok auth token found in the [ngrok dashboard](https://dashboard.ngrok.com/get-started/setup).
         authtoken: NGROK_AUTHTOKEN,
