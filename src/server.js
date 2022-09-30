@@ -40,24 +40,21 @@ async function serve(customConfig) {
     console.log(`Example app listening at http://localhost:${config.port}`)
   })
 
-  if (config.localtunnel.enabled) {
-    // https://github.com/localtunnel/localtunnel
-    config.log('Starting localtunnel')
-    const localtunnel = require('localtunnel')
-    const tunnel = await localtunnel({
-      port: config.port,
-      subdomain: config.localtunnel.subdomain,
-    })
-    tunnel.on('request', (info) => {
-      console.log(info)
-    })
-    tunnel.on('error', (error) => {
-      console.error(error)
-    })
-    tunnel.on('close', () => {
-      console.log('localtunnel closing')
-    })
-    console.log(`localtunnel: ${tunnel.url}`)
+  if (config.ngrok.enabled) {
+    const ngrok = require('ngrok')
+
+    const url = await ngrok.connect({
+      proto: 'http', // http|tcp|tls, defaults to http
+      addr: config.port, // port or network address, defaults to 80
+      subdomain: process.env.NGROK_SUBDOMAIN, // reserved tunnel name https://alex.ngrok.io
+      authtoken: process.env.NGROK_AUTHTOKEN, // your authtoken from ngrok.com
+      region: process.env.NGROK_REGION, // ngrok region for your tunnel
+      onStatusChange: status => {
+        console.log(`ngrok status change: ${status}`)
+      },
+    });
+
+    console.log(`Your ngrok tunnel URL is: ${url}`)
   }
   return {
     app,

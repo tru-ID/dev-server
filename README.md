@@ -35,14 +35,17 @@ yarn install
 
 If required, you can make configuration changes with the following environment variables:
 
-- `PORT` : change the port that the server listens on
-- `DEBUG` : determines whether debug information is logged via `console.log`
+- `PORT` : change the port that the server listens on.
+- `DEBUG` : determines whether debug information is logged via `console.log`.
 - `CONFIG_PATH` : the path to the `tru.json` configuration file for the tru.ID project. Not used if `TRU_CLIENT_ID` and `TRU_CLIENT_SECRET` are set.
-- `API_BASE_URL` : the tru.ID base URL. Defaults to `https://eu.api.tru.id`
-- `TRU_ID_CLIENT_ID` : The `client_id` of a **tru.ID** project.
-- `TRU_ID_CLIENT_SECRET` : The `client_secret` of a **tru.ID** project.
-- `USERNAME` : A username to be used with basic auth for the site
-- `PASSWORD` : A password to be used with basic auth for the site
+- `API_BASE_URL` : the tru.ID base URL. Defaults to `https://eu.api.tru.id` (`https://in.api.tru.id` is also available)
+- `TRU_CLIENT_ID` : The `client_id` of a **tru.ID** project.
+- `TRU_CLIENT_SECRET` : The `client_secret` of a **tru.ID** project.
+- `USERNAME` : A username to be used with basic auth for the site.
+- `PASSWORD` : A password to be used with basic auth for the site.
+- `NGROK_SUBDOMAIN` : If you have ngrok premium membership, you can define your ngrok subdomain here.
+- `NGROK_AUTHTOKEN` : Your ngrok auth token found in the [ngrok dashboard](https://dashboard.ngrok.com/get-started/setup)
+- `NGROK_REGION` : The `region` the ngrok tunnel is set up in.
 
 The server will attempt to load environment variables from a `.env` file in the root directory of the server.
 
@@ -68,7 +71,7 @@ $ tru projects:update --phonecheck-callback {local_tunnel_url}/phone-check/callb
 
 ### Run the server
 
-There are two ways you can run this `dev-server` for testing with, the first one is to be run locally, needing a service such as [Ngrok](https://ngrok.com/) or [LocalTunnel](https://github.com/localtunnel/localtunnel) to expose the server to the Internet. The second method is to deploy it to a sevice such as [Fly.io](https://www.fly.io).
+There are two ways you can run this `dev-server` for testing with, the first one is to be run locally, needing a service such as [Ngrok](https://ngrok.com/) to expose the server to the Internet. The second method is to deploy it to a sevice such as [Fly.io](https://www.fly.io).
 
 #### Run Locally
 
@@ -162,14 +165,19 @@ truDevServer.serve(config)
         // String. The `client_secret` of the project. Defaults to loading from a local `tru.json`.
         client_secret: CLIENT_SECRET
     },
+    // Object. Configuration for [ngrok.com](https://ngrok.com/)
+    ngrok: {
+        // Boolean. Whether ngrok should be run to expose the running server to the public Internet. Defaults to false.
+        enabled: NGROK_ENABLED,
 
-    // Object. Configuration for [localtunnel.me](https://github.com/localtunnel/localtunnel)
-    localtunnel: {
-        // Boolean. Whether localtunnel should be run to expose the running server to the public Internet. Defaults to false.
-        enabled: LOCALTUNNEL_ENABLED,
+        // String. A subdomain to use with ngrok. No default. Note: unless you have a premium membership you cannot get a defined subdomain.
+        subdomain: NGROK_SUBDOMAIN,
 
-        // String. A subdomain to use with localtunnel. No default. Note: you are not guaranteed to get the subdomain.
-        subdomain: LOCALTUNNEL_SUBDOMAIN
+        // String. Your ngrok auth token found in the [ngrok dashboard](https://dashboard.ngrok.com/get-started/setup).
+        authtoken: NGROK_AUTHTOKEN,
+
+        // String. Choice of location where the ngrok client will connect to host its tunnels.
+        region: NGROK_REGION
     },
     // Function. A function called with debug information when `DEBUG` is set to `true`. See below for default.
     log: (...args) => {
