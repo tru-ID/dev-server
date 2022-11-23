@@ -59,7 +59,7 @@ async function getSubscriberCheckResult(checkId) {
     console.log(subscriberCheckResult)
 
     if (subscriberCheckResult.data.match && subscriberCheckResult.data.no_sim_change) {
-      progressUpdate('✅ Phone Number Verified')
+      progressUpdate('✅ Phone Number Verified, and No SIM change')
     } else if (subscriberCheckResult.data.match && subscriberCheckResult.data.no_sim_change === false) {
       progressUpdate('❌ Phone Number a Match but recently changed SIM cards')
     } else {
