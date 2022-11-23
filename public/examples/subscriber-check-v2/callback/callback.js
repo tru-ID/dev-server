@@ -34,7 +34,7 @@ if (code && check_id) {
       console.log(JSON.stringify(json, null, 2))
       jsonResultEl.innerText = JSON.stringify(json)
       if (json.match && json.no_sim_change) {
-        iconResultEl.innerText = 'Is a Match! And No SIM change! ✅'
+        iconResultEl.innerText = 'Is a Match! And no SIM change! ✅'
       } else if (json.match && json.no_sim_change === false) {
         iconResultEl.innerText = 'Is a Match but SIM has recently changed! ❌'
       } else {
