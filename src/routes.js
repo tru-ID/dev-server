@@ -236,11 +236,43 @@ async function createSubscriberCheck(req, res) {
   }
 }
 
+async function createSubscriberCheckV2(req, res) {
+  const { phone_number, redirect_url } = req.body
+  if (!phone_number) {
+    res
+      .status(400)
+      .json({ error_message: 'phone_number parameter is required' })
+    return
+  }
+
+  try {
+    const SubscriberCheckRes = await api.createSubscriberCheckV2(
+      phone_number,
+      redirect_url,
+    )
+
+    // Select data to send to client
+    res.json({
+      check_id: SubscriberCheckRes.check_id,
+      check_url: SubscriberCheckRes._links.check_url.href,
+    })
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        res.status(error.response.status).send(error.response.data)
+        return
+      }
+    }
+    res.sendStatus(500)
+  }
+}
+
 /**
  * Handle the request to check the state of a SubscriberCheck. `req.params.check_id` must contain a valid SubscriberCheck ID.
  */
 async function getSubscriberCheckStatus(req, res) {
-  const checkId = req.params.check_id
+  const checkId = req.query.check_id
+
   if (!checkId) {
     res.status(400).json({ error_message: 'check_id parameter is required' })
     return
@@ -253,6 +285,86 @@ async function getSubscriberCheckStatus(req, res) {
       check_id: subscriberCheckRes.check_id,
       no_sim_change: subscriberCheckRes.no_sim_change,
       last_sim_change_at: subscriberCheckRes.last_sim_change_at,
+    })
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        res.status(error.response.status).send(error.response.data)
+        return
+      }
+    }
+    res.sendStatus(500)
+  }
+}
+
+async function getSubscriberCheckStatusV2(req, res) {
+  if (!req.query.check_id) {
+    res.status(400).json({ error_message: 'check_id parameter is required' })
+    return
+  }
+
+  try {
+    const subscriberCheckRes = await api.getSubscriberCheckV2(req.query.check_id)
+    res.json({
+      match: subscriberCheckRes.match,
+      check_id: subscriberCheckRes.check_id,
+    })
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        res.status(error.response.status).send(error.response.data)
+        return
+      }
+    }
+    res.sendStatus(500)
+  }
+}
+
+async function subscriberCheckCodeExchangeV2(req, res) {
+  if (req.method !== 'GET' && req.method !== 'POST') {
+    res.status(405).end()
+    return
+  }
+
+  let code
+  let check_id
+  let reference_id
+
+  if (req.method === 'GET') {
+    // GET is used when the subscriber check is created with a redirect back to the server
+    // so device browser/sdk will follow the url that contains the params in the query
+    code = req.query.code
+    check_id = req.query.check_id
+    reference_id = req.query.reference_id
+  } else if (req.method === 'POST') {
+    // POST is used when the subscriber check is created with a redirect back to the device
+    // so the device will have to make a POST with body that contains the params
+    code = req.body.code
+    check_id = req.body.check_id
+    reference_id = req.body.reference_id
+  }
+
+  if (!code) {
+    res.status(400).json({ error_message: 'code parameter is required' })
+    return
+  }
+  if (!check_id) {
+    res.status(400).json({ error_message: 'check_id parameter is required' })
+    return
+  }
+
+  try {
+    const subscriberCheckRes = await api.patchSubscriberCheckV2(
+      check_id,
+      code,
+      reference_id,
+    )
+
+    // Select data to send to client
+    res.json({
+      check_id: subscriberCheckRes.check_id,
+      match: subscriberCheckRes.match,
+      no_sim_change: subscriberCheckRes.no_sim_change
     })
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -398,7 +510,7 @@ function routes(_config) {
   router.post('/v0.1/phone-check/callback', phoneCheckCallback)
 
   router.post('/v0.1/subscriber-check', createSubscriberCheck)
-  router.get('/v0.1/subscriber-check/:check_id', getSubscriberCheckStatus)
+  router.get('/v0.1/subscriber-check', getSubscriberCheckStatus)
 
   router.post('/v0.1/sim-check', createSimCheck)
 
@@ -406,6 +518,10 @@ function routes(_config) {
   router.post('/v0.2/phone-check', createPhoneCheckV2)
   router.get('/v0.2/phone-check', getPhoneCheckStatusV2)
   router.use('/v0.2/phone-check/exchange-code', phoneCheckCodeExchangeV2)
+
+  router.post('/v0.2/subscriber-check', createSubscriberCheckV2)
+  router.get('/v0.2/subscriber-check', getSubscriberCheckStatusV2)
+  router.use('/v0.2/subscriber-check/exchange-code', subscriberCheckCodeExchangeV2)
 
   return router
 }

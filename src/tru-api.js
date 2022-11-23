@@ -260,6 +260,9 @@ async function patchPhoneCheckV2(check_id, code, reference_id) {
 async function createSubscriberCheck(phoneNumber) {
   return createCheck(CHECK_TYPES.SUBSCRIBER, phoneNumber)
 }
+async function createSubscriberCheckV2(phoneNumber, redirectUrl) {
+  return createCheckV2(CHECK_TYPES.SUBSCRIBER, phoneNumber, redirectUrl)
+}
 
 /**
  * Retrieves a SubscriberCheck with the given `check_id`
@@ -268,6 +271,20 @@ async function createSubscriberCheck(phoneNumber) {
  */
 async function getSubscriberCheck(checkId) {
   return getCheck(CHECK_TYPES.SUBSCRIBER, checkId)
+}
+async function getSubscriberCheckV2(checkId) {
+  return getCheckV2(CHECK_TYPES.SUBSCRIBER, checkId)
+}
+
+/**
+ * Patches a SubscriberCheck with a code.
+ *
+ * @param {String} check_id - The check ID.
+ * @param {String} code - The code used to complete the Subscriber Check flow.
+ * @param {String} reference_id - Optional.
+ */
+ async function patchSubscriberCheckV2(check_id, code, reference_id) {
+  return patchCheckV2(CHECK_TYPES.SUBSCRIBER, check_id, code, reference_id)
 }
 
 // SIMCheck
@@ -334,7 +351,10 @@ const api = {
   getPhoneCheckV2,
   patchPhoneCheckV2,
   createSubscriberCheck,
+  createSubscriberCheckV2,
   getSubscriberCheck,
+  getSubscriberCheckV2,
+  patchSubscriberCheckV2,
   createSimCheck,
   getCountryCoverage,
   getAccessToken,

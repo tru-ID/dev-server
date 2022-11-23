@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Mobile Web PhoneCheck</title>
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="../style.css" />
+  </head>
+
+  <body>
+    <img
+      id="logo"
+      src="/images/tru-vertical-square-dark-text.png"
+      alt="tru.ID logo"
+    />
+
+    <h1>Mobile Web PhoneCheck</h1>
+
+    <div id="error-result"></div>
+    <pre id="json-result"></pre>
+    <div id="icon-result" style="font-size: 20px"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tru_id/tru-sdk-web@latest/dist/tru-id-sdk.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bowser@2.11.0/es5.min.js"></script>
+    <script src="./callback.js"></script>
+  </body>
+</html>
