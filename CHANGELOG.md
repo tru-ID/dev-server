@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.9](https://github.com/tru-ID/dev-server/compare/v0.2.8...v0.2.9) (2022-11-24)
+
+- Included SubscriberCheck v0.1 and v0.2 demos within `/public/examples` directory
+
 ### [0.2.8](https://github.com/tru-ID/dev-server/compare/v0.2.1...v0.2.8) (2022-07-22)
 
 - Updated mobile-web-v2 example to use PhoneCheck v0.2 functionality within web-sdk.
