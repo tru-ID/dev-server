@@ -52,21 +52,40 @@ async function checkCoverage() {
   }
 }
 
+function showCheckResult(subscriberCheckResult) {
+  if (subscriberCheckResult.data.match && subscriberCheckResult.data.no_sim_change) {
+    progressUpdate('✅ Phone Number Verified, and no SIM change')
+  } else if (subscriberCheckResult.data.match && subscriberCheckResult.data.no_sim_change === false) {
+    progressUpdate('❌ Phone Number a Match but recently changed SIM cards')
+  } else {
+    progressUpdate('❌ Phone Number is not a match')
+  }
+
+  setStatus('has-coverage')
+}
+
 async function getSubscriberCheckResult(checkId) {
   try {
-    // Retrieve the result and show the result
-    const subscriberCheckResult = await axios.get(`/v0.1/subscriber-check?check_id=${checkId}`)
+    // Retrieve and show result
+    let subscriberCheckResult = await axios.get(`/v0.1/subscriber-check?check_id=${checkId}`)
     console.log(subscriberCheckResult)
 
-    if (subscriberCheckResult.data.match && subscriberCheckResult.data.no_sim_change) {
-      progressUpdate('✅ Phone Number Verified, and no SIM change')
-    } else if (subscriberCheckResult.data.match && subscriberCheckResult.data.no_sim_change === false) {
-      progressUpdate('❌ Phone Number a Match but recently changed SIM cards')
-    } else {
-      progressUpdate('❌ Phone Number is not a match')
-    }
+    subscriberCheckResult.status = 'PENDING'
 
-    setStatus('has-coverage')
+    if (subscriberCheckResult.status === 'PENDING') {
+      console.log('SubscriberCheck still pending. Will retry in three seconds..')
+
+      setTimeout(async () => {
+        console.log('Retrieving SubscriberCheck result')
+        subscriberCheckResult = await axios.get(`/v0.1/subscriber-check?check_id=${checkId}`)
+
+        console.log(subscriberCheckResult)
+
+        showCheckResult(subscriberCheckResult)
+      }, 3000);
+    } else {
+      showCheckResult(subscriberCheckResult)
+    }
   } catch (error) {
     console.error(error)
     handleError('An error occurred while retrieving the SubscriberCheck result.')
