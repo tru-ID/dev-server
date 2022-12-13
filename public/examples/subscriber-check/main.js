@@ -57,8 +57,10 @@ function showCheckResult(subscriberCheckResult) {
     progressUpdate('✅ Phone Number Verified, and no SIM change')
   } else if (subscriberCheckResult.data.match && subscriberCheckResult.data.no_sim_change === false) {
     progressUpdate('❌ Phone Number a Match but recently changed SIM cards')
-  } else {
+  } else if (subscriberCheckResult.data.match === false) {
     progressUpdate('❌ Phone Number is not a match')
+  } else {
+    progressUpdate('❌ SubscriberCheck failed')
   }
 
   setStatus('has-coverage')
@@ -70,7 +72,7 @@ async function getSubscriberCheckResult(checkId) {
     let subscriberCheckResult = await axios.get(`/v0.1/subscriber-check?check_id=${checkId}`)
     console.log(subscriberCheckResult)
 
-    if (subscriberCheckResult.status === 'PENDING') {
+    if (subscriberCheckResult.status === 'PENDING' || subscriberCheckResult.status === undefined) {
       console.log('SubscriberCheck still pending. Will retry in three seconds..')
 
       setTimeout(async () => {
