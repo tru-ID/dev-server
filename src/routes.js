@@ -410,6 +410,17 @@ async function createSimCheck(req, res) {
   }
 }
 
+// Coverage Access Token
+async function getCoverageAccessToken(req, res) {
+  const accessToken = await api.getAccessToken(['coverage'])
+
+  if (accessToken === 'undefined') {
+    return res.status(400).json({ error_message: 'Unable to create Coverage access token' })
+  }
+
+  return res.status(200).json({ token: accessToken })
+}
+
 // Country
 
 async function getCountryCoverage(req, res) {
@@ -470,13 +481,6 @@ async function traces(req, res) {
   res.sendStatus(200)
 }
 
-// Helpers
-async function getMyIp(req, res) {
-  const ipResponse = { ip_address: req.ip }
-  req.log.info('MyIp', ipResponse)
-  res.status(200).json(ipResponse)
-}
-
 function routes(_config) {
   config = _config
 
@@ -495,10 +499,9 @@ function routes(_config) {
 
   router.post('/sim-check', createSimCheck)
 
+  router.get('/coverage-access-token', getCoverageAccessToken)
   router.get('/country', getCountryCoverage)
   router.get('/device', getDeviceCoverage)
-
-  router.get('/my-ip', getMyIp)
 
   router.post('/traces', traces)
   router.post('/v0.1/traces', traces)
