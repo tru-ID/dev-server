@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.10](https://github.com/tru-ID/dev-server/compare/v0.2.9...v0.2.10) (2023-01-24)
+
+- Added `/coverage-access-token` endpoint, which allows applications to request an access token with just the `coverage` scope. This is used to request a reachability request through an authenticated method.
+- Removed `/my-ip` endpoint, no longer neccessary
+- Small changes/tidied up the landing page of the examples section
+
 ### [0.2.9](https://github.com/tru-ID/dev-server/compare/v0.2.8...v0.2.9) (2022-11-24)
 
 - Included SubscriberCheck v0.1 and v0.2 demos within `/public/examples` directory

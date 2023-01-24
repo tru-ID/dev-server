@@ -1,6 +1,6 @@
 {
   "name": "@tru_id/dev-server",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "description": "An example tru.ID server to help with the tru.ID development process",
   "repository": {
     "type": "git",
