@@ -26,7 +26,25 @@ async function checkCoverage() {
 
   console.log('requesting coverage')
   try {
-    const deviceCoverageResult = await axios.get('/device', {
+    const coverageTokenResponse = await axios.get('/coverage-access-token', {
+      validateStatus: (status) => status === 200,
+    })
+
+    if (coverageTokenResponse.status !== 200) {
+      handleError('An error occurred while generating coverage access token to check device coverage.')
+
+      return
+    }
+
+    console.log('coverage access token ', coverageTokenResponse.data.token)
+
+    const deviceCoverageResult = await axios.get('https://eu.api.tru.id/coverage/v0.1/device_ip', {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        Authorization: `Bearer ${coverageTokenResponse.data.token}`,
+        'Content-Type': 'application/json',
+      }
+    },{
       validateStatus: (status) => status >= 200 && status <= 412,
     })
     console.log(deviceCoverageResult)
@@ -35,17 +53,19 @@ async function checkCoverage() {
     if (deviceCoverageResult.status === 200) {
       // tru.ID has coverage
       setStatus('has-coverage')
-    } else if (deviceCoverageResult.status === 400) {
-      // No coverage
-      setStatus('no-coverage')
-    } else if (deviceCoverageResult.status === 412) {
-      // No coverage
-      setStatus('no-mobile-ip')
     } else {
       handleError('Unexpected result from device coverage check.')
     }
   } catch (ex) {
-    handleError('An error occurred while checking device coverage.')
+    if (ex.response.status === 400) {
+      // No coverage
+      setStatus('no-coverage')
+    } else if (ex.response.status === 412) {
+      // No coverage
+      setStatus('no-mobile-ip')
+    } else {
+      handleError('An error occurred while checking device coverage.')
+    }
   } finally {
     const subscriberCheckBox = document.getElementById('subscriber_check')
     subscriberCheckBox.classList.remove('hidden')

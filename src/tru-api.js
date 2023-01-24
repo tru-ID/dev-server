@@ -23,10 +23,37 @@ let config
 
 // Tokens
 
+async function getCoverageAccessToken() {
+  const url = `${config.apiBaseUrl}/oauth2/v1/token`
+  const params = qs.stringify({
+    grant_type: 'client_credentials',
+
+    // scope to use depends on product
+    scope: ['coverage'],
+  })
+
+  const toEncode = `${config.project.client_id}:${config.project.client_secret}`
+  const auth = Buffer.from(toEncode).toString('base64')
+  const requestHeaders = {
+    Authorization: `Basic ${auth}`,
+    'Content-Type': 'application/x-www-form-urlencoded',
+  }
+
+  logger.info({ url, params, requestHeaders })
+
+  const accessTokenResult = await axios.post(url, params, {
+    headers: requestHeaders,
+  })
+
+  logger.info(accessTokenResult.data)
+
+  return accessTokenResult.data.access_token
+}
+
 /**
- * Creates an Access Token withon `phone_check` scope.
+ * Creates an Access Token with specified scopes.
  *
- * @param scopes {Object} Optional. Array of scopes for the created access token. Defaults to `['phone_check sim_check coverage']`.
+ * @param scopes {Object} Optional. Array of scopes for the created access token. Defaults to `['phone_check sim_check subscriber_check coverage']`.
  */
 async function getAccessToken(scopes = DEFAULT_SCOPES) {
   logger.info('getAccessToken')
@@ -358,6 +385,7 @@ const api = {
   createSimCheck,
   getCountryCoverage,
   getAccessToken,
+  getCoverageAccessToken,
   getDeviceCoverage,
 }
 
