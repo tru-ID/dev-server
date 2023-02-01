@@ -92,7 +92,7 @@ async function getSubscriberCheckResult(checkId) {
     let subscriberCheckResult = await axios.get(`/v0.1/subscriber-check?check_id=${checkId}`)
     console.log(subscriberCheckResult)
 
-    if (subscriberCheckResult.status === 'PENDING' || subscriberCheckResult.status === undefined) {
+    if (subscriberCheckResult.status === 'PENDING' || subscriberCheckResult.status === undefined || (subscriberCheckResult.status === 200 && subscriberCheckResult.data.match === undefined)) {
       console.log('SubscriberCheck still pending. Will retry in three seconds..')
 
       setTimeout(async () => {
