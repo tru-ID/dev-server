@@ -412,7 +412,7 @@ async function createSimCheck(req, res) {
 
 // Coverage Access Token
 async function getCoverageAccessToken(req, res) {
-  const accessToken = await api.getAccessToken(['coverage'])
+  const accessToken = await api.getCoverageAccessToken()
 
   if (accessToken === 'undefined') {
     return res.status(400).json({ error_message: 'Unable to create Coverage access token' })
