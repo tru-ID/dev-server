@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.11](https://github.com/tru-ID/dev-server/compare/v0.2.10...v0.2.11) (2023-02-01)
+
+- Fixed issue where `coverage` scope was not being correctly defined in the `/coverage-access-token` endpoint.
+- Fixed a condition in `/examples/subscriber-check`, where if there was a slight latency is the result, it would show as failed even if it had passed.
+
 ### [0.2.10](https://github.com/tru-ID/dev-server/compare/v0.2.9...v0.2.10) (2023-01-24)
 
 - Added `/coverage-access-token` endpoint, which allows applications to request an access token with just the `coverage` scope. This is used to request a reachability request through an authenticated method.
