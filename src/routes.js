@@ -418,7 +418,7 @@ async function getCoverageAccessToken(req, res) {
     return res.status(400).json({ error_message: 'Unable to create Coverage access token' })
   }
 
-  return res.status(200).json({ token: accessToken })
+  return res.status(200).json({ token: accessToken, url: `${config.apiBaseUrl}/coverage/v0.1/device_ip` })
 }
 
 // Country
