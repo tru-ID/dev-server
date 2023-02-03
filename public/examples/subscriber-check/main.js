@@ -37,8 +37,9 @@ async function checkCoverage() {
     }
 
     console.log('coverage access token ', coverageTokenResponse.data.token)
+    console.log('coverage API url ', coverageTokenResponse.data.url)
 
-    const deviceCoverageResult = await axios.get('https://eu.api.tru.id/coverage/v0.1/device_ip', {
+    const deviceCoverageResult = await axios.get(`${coverageTokenResponse.data.url}`, {
       headers: {
         'Access-Control-Allow-Origin': '*',
         Authorization: `Bearer ${coverageTokenResponse.data.token}`,
