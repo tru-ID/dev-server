@@ -34,6 +34,14 @@ async function configure(params) {
         console.debug.call(...args)
       }
     },
+    loginId: {
+      clientId: process.env.LOGIN_ID_CLIENT_ID,
+      baseUrl: process.env.LOGIN_ID_BASE_URL,
+      privateKey: {
+        pemKey: process.env.LOGIN_ID_PEM_KEY,
+        algorithm: process.env.LOGIN_ID_PEM_KEY_ALG,
+      },
+    },
   }
 
   if (CLIENT_ID && CLIENT_SECRET) {

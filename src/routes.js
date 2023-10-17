@@ -5,6 +5,8 @@ const httpSignature = require('http-signature')
 const util = require('util')
 const createApi = require('./tru-api')
 
+const { deleteFidoUser } = require("./alpha/user");
+
 const router = Router()
 let api = null
 let config = null
@@ -481,7 +483,7 @@ async function traces(req, res) {
   res.sendStatus(200)
 }
 
-function routes(_config) {
+async function routes(_config) {
   config = _config
 
   api = createApi(config)
@@ -525,6 +527,9 @@ function routes(_config) {
   router.post('/v0.2/subscriber-check', createSubscriberCheckV2)
   router.get('/v0.2/subscriber-check', getSubscriberCheckStatusV2)
   router.use('/v0.2/subscriber-check/exchange-code', subscriberCheckCodeExchangeV2)
+
+  // alpha routes
+  router.delete('/alpha/user', (await deleteFidoUser(config)));
 
   return router
 }

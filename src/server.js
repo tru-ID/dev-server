@@ -34,7 +34,7 @@ async function serve(customConfig) {
   }
   app.use(express.static(path.join(__dirname, '..', 'public')))
 
-  app.use(routes(config))
+  app.use((await routes(config)))
 
   const server = app.listen(config.port, () => {
     console.log(`Example app listening at http://localhost:${config.port}`)
