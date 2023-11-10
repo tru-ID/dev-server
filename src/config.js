@@ -38,7 +38,7 @@ async function configure(params) {
       clientId: process.env.LOGIN_ID_CLIENT_ID,
       baseUrl: process.env.LOGIN_ID_BASE_URL,
       privateKey: {
-        pemKey: process.env.LOGIN_ID_PEM_KEY,
+        pemKey: process.env.LOGIN_ID_PEM_KEY?.replaceAll('\\n', '\n'),
         algorithm: process.env.LOGIN_ID_PEM_KEY_ALG,
       },
     },
