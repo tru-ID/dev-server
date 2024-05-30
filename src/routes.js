@@ -4,6 +4,7 @@ const jwksClient = require('jwks-rsa')
 const httpSignature = require('http-signature')
 const util = require('util')
 const createApi = require('./tru-api')
+const { logger } = require('./logger')
 
 const router = Router()
 let api = null
@@ -410,6 +411,39 @@ async function createSimCheck(req, res) {
   }
 }
 
+//mo check
+async function createMoCheck(req, res) {
+  console.log(req.body)
+  const phoneNumber = req.body.phone_number
+
+  logger.info('createMoCheck')
+
+  if (!phoneNumber) {
+    res
+      .status(400)
+      .json({ error_message: 'phone_number parameter is required' })
+    return
+  }
+
+  try {
+    const moCheckRes = await api.createMoCheck(phoneNumber)
+
+    // Select data to send to client
+    res.json({
+      mo_body: moCheckRes.mo_body,
+      mo_receiver: moCheckRes.mo_receiver,
+    })
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        res.status(error.response.status).send(error.response.data)
+        return
+      }
+    }
+    res.sendStatus(500)
+  }
+}
+
 // Coverage Access Token
 async function getCoverageAccessToken(req, res) {
   const accessToken = await api.getCoverageAccessToken()
@@ -498,6 +532,8 @@ function routes(_config) {
   router.get('/subscriber-check/:check_id', getSubscriberCheckStatus)
 
   router.post('/sim-check', createSimCheck)
+
+  router.post('/mo-check', createMoCheck)
 
   router.get('/coverage-access-token', getCoverageAccessToken)
   router.get('/country', getCountryCoverage)

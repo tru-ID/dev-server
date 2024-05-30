@@ -3,7 +3,7 @@ const moment = require('moment')
 const qs = require('querystring')
 const { logger } = require('./logger')
 
-const DEFAULT_SCOPES = ['phone_check sim_check subscriber_check coverage']
+const DEFAULT_SCOPES = ['phone_check sim_check subscriber_check mo_check coverage']
 
 // token cache in memory
 const TOKEN = {
@@ -16,6 +16,7 @@ const CHECK_TYPES = {
   PHONE: 'phone',
   SIM: 'sim',
   SUBSCRIBER: 'subscriber',
+  MO: "mo"
 }
 
 // TODO this smells, fix it later
@@ -108,7 +109,7 @@ async function getAccessToken(scopes = DEFAULT_SCOPES) {
 /**
  * Creates a Check of a type for the given `phoneNumber`.
  *
- * @param {String} type - `phone`, `sim` or `subscriber` via `CHECK_TYPES`
+ * @param {String} type - `phone`, `sim`, `subscriber` or `mo`  via `CHECK_TYPES`
  * @param {String} phoneNumber - The phone number to create a Phone Check for.
  */
 async function createCheck(type, phoneNumber) {
@@ -320,6 +321,13 @@ async function createSimCheck(phoneNumber) {
   return createCheck(CHECK_TYPES.SIM, phoneNumber)
 }
 
+
+// MoCheck
+
+async function createMoCheck(phoneNumber) {
+  return createCheck(CHECK_TYPES.MO, phoneNumber)
+}
+
 // Coverage / Countries
 
 /**
@@ -383,6 +391,7 @@ const api = {
   getSubscriberCheckV2,
   patchSubscriberCheckV2,
   createSimCheck,
+  createMoCheck,
   getCountryCoverage,
   getAccessToken,
   getCoverageAccessToken,
