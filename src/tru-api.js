@@ -328,6 +328,15 @@ async function createMoCheck(phoneNumber) {
   return createCheck(CHECK_TYPES.MO, phoneNumber)
 }
 
+/**
+ * Retrieves a MoCheck with the given `check_id`
+ *
+ * @param {String} checkId The ID of the MoCheck to retrieve.
+ */
+async function getMoCheck(checkId) {
+  return getCheck(CHECK_TYPES.MO, checkId)
+}
+
 // Coverage / Countries
 
 /**
@@ -392,6 +401,7 @@ const api = {
   patchSubscriberCheckV2,
   createSimCheck,
   createMoCheck,
+  getMoCheck,
   getCountryCoverage,
   getAccessToken,
   getCoverageAccessToken,

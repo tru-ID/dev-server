@@ -444,6 +444,29 @@ async function createMoCheck(req, res) {
   }
 }
 
+async function getMoCheckStatus(req, res) {
+  if (!req.query.check_id) {
+    res.status(400).json({ error_message: 'check_id parameter is required' })
+    return
+  }
+
+  try {
+    const moCheckRes = await api.getMoCheck(req.query.check_id)
+    res.json({
+      verified: moCheckRes.verified,
+      check_id: moCheckRes.check_id,
+    })
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        res.status(error.response.status).send(error.response.data)
+        return
+      }
+    }
+    res.sendStatus(500)
+  }
+}
+
 // Coverage Access Token
 async function getCoverageAccessToken(req, res) {
   const accessToken = await api.getCoverageAccessToken()
@@ -561,6 +584,9 @@ function routes(_config) {
   router.post('/v0.2/subscriber-check', createSubscriberCheckV2)
   router.get('/v0.2/subscriber-check', getSubscriberCheckStatusV2)
   router.use('/v0.2/subscriber-check/exchange-code', subscriberCheckCodeExchangeV2)
+
+  router.post('/v0.1/mo-check', createMoCheck)
+  router.get('/v0.1/mo-check', getMoCheckStatus)
 
   return router
 }
