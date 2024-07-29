@@ -430,6 +430,7 @@ async function createMoCheck(req, res) {
 
     // Select data to send to client
     res.json({
+      check_id: moCheckRes.check_id,
       mo_body: moCheckRes.mo_body,
       mo_receiver: moCheckRes.mo_receiver,
     })
