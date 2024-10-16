@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.1](https://github.com/tru-ID/dev-server/compare/v0.2.12...v0.3.1) (2024-10-16)
+
+- adding MOCheck endpoints
+
 ### [0.2.12](https://github.com/tru-ID/dev-server/compare/v0.2.11...v0.2.12) (2023-02-03)
 
 - Improved automation of authenticated coverage check. The `/coverage-access-token` now also returns a URL for that access token. Reducing any confusion over manual input for the data residency.
