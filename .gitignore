@@ -4,3 +4,4 @@ tru.json
 .env
 fly.toml
 .DS_Store
+.idea/
